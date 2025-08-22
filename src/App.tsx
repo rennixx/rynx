@@ -9,6 +9,7 @@ import { SmoothScroll } from './components/animations';
 import { useReducedMotion } from './hooks/useReducedMotion';
 import type { NavItem } from './types';
 import { Analytics } from '@vercel/analytics/react';
+import { injectSpeedInsights } from '@vercel/speed-insights';
 
 const App: React.FC = () => {
   // const [backgroundEffect, setBackgroundEffect] = useState<'matrix' | 'particles' | 'neural' | 'dna' | 'none'>('particles');
@@ -28,6 +29,12 @@ const App: React.FC = () => {
     const timer = setTimeout(() => {
       setIsLoaded(true);
     }, 100);
+
+    // Inject SpeedInsights
+    const speedInsights = injectSpeedInsights();
+    if (speedInsights) {
+      speedInsights.setRoute(window.location.pathname);
+    }
 
     return () => clearTimeout(timer);
   }, []);
