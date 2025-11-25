@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import QueryProvider from './providers/QueryProvider';
 import ErrorBoundary from './components/common/ErrorBoundary';
 import { Header, Footer } from './components/layout';
-import { Hero, About, Projects, Contact } from './components/sections';
+import { Hero, About, Skills, Projects, Contact } from './components/sections';
 // import { MatrixRain, ParticleSystem, NeuralNetwork, DNAHelix } from './components/background';
 import { CursorTrail } from './components/effects';
 import { SmoothScroll } from './components/animations';
@@ -19,7 +19,7 @@ const App: React.FC = () => {
   const navItems: NavItem[] = [
     { label: 'Home', href: '#hero' },
     { label: 'About', href: '#about' },
-    // { label: 'Skills', href: '#skills' },
+    { label: 'Skills', href: '#skills' },
     { label: 'Projects', href: '#projects' },
     { label: 'Contact', href: '#contact' },
   ];
@@ -75,7 +75,7 @@ const App: React.FC = () => {
               <main>
                 <Hero />
                 <About />
-                {/* <Skills /> */}
+                <Skills />
                 <Projects />
                 <Contact />
               </main>

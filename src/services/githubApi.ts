@@ -22,6 +22,7 @@ export interface GitHubRepo {
   archived: boolean;
   disabled: boolean;
   private: boolean;
+  fork: boolean;
 }
 
 export interface GitHubUser {

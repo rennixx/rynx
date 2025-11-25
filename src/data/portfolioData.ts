@@ -70,91 +70,77 @@ export interface BlogPost {
 export const projects: Project[] = [
   {
     id: 'portfolio-website',
-    title: 'Interactive Portfolio Website',
-    description: 'Modern React portfolio with advanced animations and 3D effects',
-    longDescription: 'A cutting-edge portfolio website built with React, TypeScript, and Framer Motion. Features include a 3D animated background with water sphere effects, typewriter animations, and a fully responsive design with dark theme.',
-    technologies: ['React', 'TypeScript', 'Framer Motion', 'Tailwind CSS', 'Vite', 'Canvas API'],
-    githubUrl: 'https://github.com/yourusername/portfolio',
-    liveUrl: 'https://yourportfolio.dev',
-    imageUrl: '/images/portfolio-preview.jpg',
+    title: 'RYNX Portfolio',
+    description: 'Modern interactive portfolio with 3D animations and advanced effects',
+    longDescription: 'A cutting-edge portfolio website showcasing my skills and projects. Features custom 3D water sphere animations, smooth transitions, and a fully responsive design optimized for performance.',
+    technologies: ['React', 'TypeScript', 'Tailwind CSS', 'Framer Motion', 'Vite', 'Canvas API'],
+    githubUrl: 'https://github.com/rennixx/rynx',
+    liveUrl: 'https://rynx.dev',
+    imageUrl: 'https://opengraph.githubassets.com/1/rennixx/rynx',
     featured: true,
     category: 'web',
     status: 'completed',
     startDate: '2024-01-01',
-    endDate: '2024-02-15',
-    caseStudy: {
-      challenge: 'Create a unique portfolio that stands out with advanced animations while maintaining performance',
-      solution: 'Implemented a multi-phase development approach with optimized Canvas animations and motion design',
-      results: [
-        '60fps animations across all devices',
-        '95+ performance score on Lighthouse',
-        'Unique water sphere 3D effect'
-      ],
-      learnings: [
-        'Advanced Canvas optimization techniques',
-        'Complex animation orchestration with Framer Motion',
-        'Performance-first animation development'
-      ]
-    }
+    endDate: '2024-02-15'
   },
   {
-    id: 'ecommerce-platform',
-    title: 'E-commerce Platform',
-    description: 'Full-stack e-commerce solution with React and Node.js',
-    longDescription: 'A comprehensive e-commerce platform featuring user authentication, product management, shopping cart, payment integration, and admin dashboard. Built with modern technologies and best practices.',
-    technologies: ['React', 'Node.js', 'Express', 'MongoDB', 'Stripe', 'JWT', 'Redux'],
-    githubUrl: 'https://github.com/yourusername/ecommerce-platform',
-    liveUrl: 'https://shop.yoursite.com',
-    imageUrl: '/images/ecommerce-preview.jpg',
+    id: 'mamcenter2012',
+    title: 'Mamcenter2012',
+    description: 'Educational platform for learning and development resources',
+    longDescription: 'An educational platform providing comprehensive learning resources and development tools for students and educators, featuring interactive content management and user engagement features.',
+    technologies: ['React', 'JavaScript', 'Node.js', 'MongoDB', 'CSS'],
+    githubUrl: 'https://github.com/rennixx/mamcenter2012',
+    imageUrl: 'https://opengraph.githubassets.com/1/rennixx/mamcenter2012',
     featured: true,
     category: 'web',
     status: 'completed',
-    startDate: '2023-09-01',
-    endDate: '2023-12-15'
+    startDate: '2023-08-01',
+    endDate: '2023-12-01'
   },
   {
-    id: 'task-management-app',
-    title: 'Task Management App',
-    description: 'Collaborative task management with real-time updates',
-    longDescription: 'A productivity app that enables teams to collaborate on projects with real-time updates, drag-and-drop functionality, and advanced filtering options.',
-    technologies: ['React', 'Socket.io', 'Node.js', 'PostgreSQL', 'Docker'],
-    githubUrl: 'https://github.com/yourusername/task-manager',
-    imageUrl: '/images/taskmanager-preview.jpg',
+    id: 'lis',
+    title: 'LIS',
+    description: 'Library Information System for managing library operations',
+    longDescription: 'A comprehensive library information system designed to streamline library operations, including book management, user tracking, and administrative functions with modern web technologies.',
+    technologies: ['React', 'Node.js', 'Express', 'MongoDB', 'REST APIs'],
+    githubUrl: 'https://github.com/rennixx/LIS',
+    imageUrl: 'https://opengraph.githubassets.com/1/rennixx/LIS',
     featured: false,
     category: 'web',
-    status: 'in-progress',
-    startDate: '2024-01-15'
+    status: 'completed',
+    startDate: '2023-06-01',
+    endDate: '2023-10-01'
   }
 ];
 
 export const skills: Skill[] = [
-  // Frontend
-  { name: 'React', level: 95, category: 'frontend', yearsOfExperience: 4, color: '#61DAFB' },
-  { name: 'TypeScript', level: 90, category: 'frontend', yearsOfExperience: 3, color: '#3178C6' },
-  { name: 'JavaScript', level: 95, category: 'frontend', yearsOfExperience: 5, color: '#F7DF1E' },
-  { name: 'Next.js', level: 85, category: 'frontend', yearsOfExperience: 2, color: '#000000' },
-  { name: 'Vue.js', level: 75, category: 'frontend', yearsOfExperience: 2, color: '#4FC08D' },
-  { name: 'HTML/CSS', level: 98, category: 'frontend', yearsOfExperience: 6, color: '#E34F26' },
-  { name: 'Tailwind CSS', level: 92, category: 'frontend', yearsOfExperience: 3, color: '#06B6D4' },
-  { name: 'Framer Motion', level: 88, category: 'frontend', yearsOfExperience: 2, color: '#0055FF' },
+  // Frontend - Core Strengths
+  { name: 'React', level: 90, category: 'frontend', yearsOfExperience: 3, color: '#61DAFB' },
+  { name: 'TypeScript', level: 85, category: 'frontend', yearsOfExperience: 2, color: '#3178C6' },
+  { name: 'JavaScript', level: 95, category: 'frontend', yearsOfExperience: 4, color: '#F7DF1E' },
+  { name: 'HTML/CSS', level: 95, category: 'frontend', yearsOfExperience: 4, color: '#E34F26' },
+  { name: 'Tailwind CSS', level: 88, category: 'frontend', yearsOfExperience: 2, color: '#06B6D4' },
+  { name: 'Framer Motion', level: 80, category: 'frontend', yearsOfExperience: 1, color: '#0055FF' },
+  { name: 'Three.js', level: 75, category: 'frontend', yearsOfExperience: 1, color: '#000000' },
 
   // Backend
-  { name: 'Node.js', level: 88, category: 'backend', yearsOfExperience: 4, color: '#339933' },
-  { name: 'Express.js', level: 85, category: 'backend', yearsOfExperience: 3, color: '#000000' },
-  { name: 'Python', level: 80, category: 'backend', yearsOfExperience: 3, color: '#3776AB' },
-  { name: 'Django', level: 75, category: 'backend', yearsOfExperience: 2, color: '#092E20' },
-  { name: 'GraphQL', level: 70, category: 'backend', yearsOfExperience: 1, color: '#E10098' },
+  { name: 'Node.js', level: 82, category: 'backend', yearsOfExperience: 2, color: '#339933' },
+  { name: 'Express.js', level: 78, category: 'backend', yearsOfExperience: 2, color: '#000000' },
+  { name: 'Python', level: 70, category: 'backend', yearsOfExperience: 1, color: '#3776AB' },
+  { name: 'REST APIs', level: 85, category: 'backend', yearsOfExperience: 2, color: '#FF6B6B' },
 
   // Database
-  { name: 'MongoDB', level: 82, category: 'database', yearsOfExperience: 3, color: '#47A248' },
-  { name: 'PostgreSQL', level: 78, category: 'database', yearsOfExperience: 2, color: '#336791' },
-  { name: 'Redis', level: 65, category: 'database', yearsOfExperience: 1, color: '#DC382D' },
+  { name: 'MongoDB', level: 75, category: 'database', yearsOfExperience: 1, color: '#47A248' },
+  { name: 'PostgreSQL', level: 70, category: 'database', yearsOfExperience: 1, color: '#336791' },
 
   // DevOps & Tools
-  { name: 'Docker', level: 75, category: 'devops', yearsOfExperience: 2, color: '#2496ED' },
-  { name: 'AWS', level: 70, category: 'devops', yearsOfExperience: 2, color: '#FF9900' },
-  { name: 'Git', level: 95, category: 'tool', yearsOfExperience: 5, color: '#F05032' },
-  { name: 'Figma', level: 85, category: 'design', yearsOfExperience: 3, color: '#F24E1E' }
+  { name: 'Git', level: 90, category: 'tool', yearsOfExperience: 3, color: '#F05032' },
+  { name: 'Vite', level: 85, category: 'tool', yearsOfExperience: 2, color: '#646CFF' },
+  { name: 'Vercel', level: 80, category: 'devops', yearsOfExperience: 1, color: '#000000' },
+  { name: 'Docker', level: 65, category: 'devops', yearsOfExperience: 1, color: '#2496ED' },
+
+  // Design
+  { name: 'Figma', level: 70, category: 'design', yearsOfExperience: 1, color: '#F24E1E' }
 ];
 
 export const experiences: Experience[] = [

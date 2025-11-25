@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import TypewriterText from '../effects/TypewriterText';
 import type { NavItem } from '../../types';
 import { useReducedMotion } from '../../hooks/useReducedMotion';
@@ -141,7 +141,7 @@ const Header: React.FC<HeaderProps> = ({ navItems }) => {
           ) : (
             <motion.button
               onClick={toggleMenu}
-              className="md:hidden p-2 rounded-md text-gray-300 hover:text-white hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 transition-colors duration-200"
+              className="md:hidden p-2 rounded-md text-gray-300 hover:text-white hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 transition-colors duration-200 relative"
               aria-expanded={isMenuOpen}
               aria-controls="mobile-menu"
               aria-label="Toggle navigation menu"
@@ -151,27 +151,77 @@ const Header: React.FC<HeaderProps> = ({ navItems }) => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
+              {/* Animated background circle */}
+              <motion.div
+                className="absolute inset-0 rounded-full bg-gray-800"
+                initial={{ scale: 0, opacity: 0 }}
+                animate={{
+                  scale: isMenuOpen ? 1 : 0,
+                  opacity: isMenuOpen ? 0.5 : 0
+                }}
+                transition={{
+                  duration: 0.2,
+                  ease: "easeInOut"
+                }}
+              />
+
+              {/* Menu icon lines with animation */}
               <svg
-                className="h-6 w-6"
+                className="h-6 w-6 relative z-10"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
                 aria-hidden="true"
               >
                 {isMenuOpen ? (
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M6 18L18 6M6 6l12 12"
-                  />
+                  // Close icon (X)
+                  <g>
+                    <motion.path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6"
+                      initial={{ pathLength: 0 }}
+                      animate={{ pathLength: 1 }}
+                      exit={{ pathLength: 0 }}
+                      transition={{ duration: 0.2, ease: "easeInOut" }}
+                    />
+                    <motion.path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 6l12 12"
+                      initial={{ pathLength: 0 }}
+                      animate={{ pathLength: 1 }}
+                      exit={{ pathLength: 0 }}
+                      transition={{ duration: 0.2, delay: 0.1, ease: "easeInOut" }}
+                    />
+                  </g>
                 ) : (
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 6h16M4 12h16M4 18h16"
-                  />
+                  // Hamburger icon
+                  <g>
+                    {[
+                      { d: "M4 6h16", delay: 0 },
+                      { d: "M4 12h16", delay: 0.1 },
+                      { d: "M4 18h16", delay: 0.2 }
+                    ].map((line, index) => (
+                      <motion.path
+                        key={index}
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d={line.d}
+                        initial={{ pathLength: 0, opacity: 0 }}
+                        animate={{ pathLength: 1, opacity: 1 }}
+                        exit={{ pathLength: 0, opacity: 0 }}
+                        transition={{
+                          duration: 0.2,
+                          delay: line.delay,
+                          ease: "easeInOut"
+                        }}
+                      />
+                    ))}
+                  </g>
                 )}
               </svg>
             </motion.button>
@@ -180,26 +230,89 @@ const Header: React.FC<HeaderProps> = ({ navItems }) => {
       </div>
 
       {/* Mobile Navigation */}
-      {isMenuOpen && (
-        <nav
-          id="mobile-menu"
-          className="md:hidden bg-transparent border-t border-transparent"
-          role="navigation"
-        >
-          <div className="container py-4">
-            <div className="flex flex-col space-y-4">
-              {navItems.map((item) => (
-                <button
-                  key={item.href}
-                  onClick={() => scrollToSection(item.href)}
-                  className="text-left text-gray-300 hover:text-white font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 rounded-md px-2 py-2"
-                >
-                  {item.label}
-                </button>
-              ))}
+      {prefersReducedMotion ? (
+        isMenuOpen && (
+          <nav
+            id="mobile-menu"
+            className="md:hidden bg-black/95 backdrop-blur-lg border-t border-gray-800"
+            role="navigation"
+          >
+            <div className="container py-4">
+              <div className="flex flex-col space-y-4">
+                {navItems.map((item) => (
+                  <button
+                    key={item.href}
+                    onClick={() => scrollToSection(item.href)}
+                    className="text-left text-gray-300 hover:text-white font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 rounded-md px-2 py-2"
+                  >
+                    {item.label}
+                  </button>
+                ))}
+              </div>
             </div>
-          </div>
-        </nav>
+          </nav>
+        )
+      ) : (
+        <AnimatePresence>
+          {isMenuOpen && (
+            <motion.nav
+              id="mobile-menu"
+              className="md:hidden bg-black/95 backdrop-blur-lg border-t border-gray-800"
+              role="navigation"
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{
+                duration: 0.3,
+                ease: "easeInOut",
+                height: { type: "spring", stiffness: 300, damping: 30 }
+              }}
+            >
+              <motion.div
+                className="container py-4"
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.2, delay: 0.1 }}
+              >
+                <div className="flex flex-col space-y-4">
+                  {navItems.map((item, index) => (
+                    <motion.button
+                      key={item.href}
+                      onClick={() => scrollToSection(item.href)}
+                      className="text-left text-gray-300 hover:text-white font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 rounded-md px-2 py-2 relative overflow-hidden group"
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -20 }}
+                      transition={{
+                        duration: 0.3,
+                        delay: 0.1 + index * 0.05,
+                        ease: "easeOut"
+                      }}
+                      whileHover={{
+                        x: 5,
+                        transition: { duration: 0.2 }
+                      }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      <span className="relative z-10">{item.label}</span>
+                      {/* Animated underline */}
+                      <motion.div
+                        className="absolute bottom-0 left-0 h-px bg-gradient-to-r from-blue-400 to-purple-400"
+                        initial={{ width: 0 }}
+                        whileHover={{
+                          width: "100%",
+                          transition: { duration: 0.3, ease: "easeOut" }
+                        }}
+                        style={{ width: 0 }}
+                      />
+                    </motion.button>
+                  ))}
+                </div>
+              </motion.div>
+            </motion.nav>
+          )}
+        </AnimatePresence>
       )}
     </header>
   );
