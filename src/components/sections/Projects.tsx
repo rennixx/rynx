@@ -23,7 +23,7 @@ const Projects: React.FC = () => {
     // Add GitHub repos as projects
     if (githubRepos) {
       githubRepos.forEach((repo) => {
-        // Skip if it's already in sample projects or if it's a fork
+        //Skip if it's already in sample projects or if it's a fork
         if (sampleProjects.some(p => p.githubUrl?.includes(repo.full_name)) || repo.fork) {
           return;
         }
