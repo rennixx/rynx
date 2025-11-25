@@ -80,8 +80,8 @@ export const projects: Project[] = [
     featured: true,
     category: 'web',
     status: 'completed',
-    startDate: '2024-01-01',
-    endDate: '2024-02-15'
+    startDate: '2024-08-01',
+    endDate: '2025-01-15'
   },
   {
     id: 'mamcenter2012',
@@ -95,8 +95,8 @@ export const projects: Project[] = [
     featured: true,
     category: 'web',
     status: 'completed',
-    startDate: '2023-08-01',
-    endDate: '2023-12-01'
+    startDate: '2024-06-01',
+    endDate: '2024-10-15'
   },
   {
     id: 'lis',
@@ -109,8 +109,8 @@ export const projects: Project[] = [
     featured: false,
     category: 'web',
     status: 'completed',
-    startDate: '2023-06-01',
-    endDate: '2023-10-01'
+    startDate: '2025-01-01',
+    endDate: '2025-03-01'
   }
 ];
 
