@@ -161,7 +161,7 @@ const AnimatedButton = forwardRef<HTMLButtonElement, AnimatedButtonProps>(
         {effect === 'glitch' && !prefersReducedMotion && (
           <>
             <motion.div
-              className="absolute inset-0 bg-red-500 mix-blend-multiply opacity-0"
+              className="absolute inset-0 bg-destructive mix-blend-multiply opacity-0"
               animate={{
                 opacity: [0, 0, 0, 0.1, 0],
                 x: [0, -1, 1, 0, 0],
@@ -173,7 +173,7 @@ const AnimatedButton = forwardRef<HTMLButtonElement, AnimatedButtonProps>(
               }}
             />
             <motion.div
-              className="absolute inset-0 bg-blue-500 mix-blend-multiply opacity-0"
+              className="absolute inset-0 bg-info mix-blend-multiply opacity-0"
               animate={{
                 opacity: [0, 0, 0.1, 0, 0],
                 x: [0, 1, -1, 0, 0],

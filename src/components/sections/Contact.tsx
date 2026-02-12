@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { sendContactEmail } from '../../services/emailService';
 import { personalInfo } from '../../data/portfolioData';
+import { useReducedMotion } from '../../hooks/useReducedMotion';
 import type { ContactForm } from '../../types';
 
 type FormState = 'idle' | 'loading' | 'success' | 'error';
@@ -32,6 +33,7 @@ const quickLinks = [
 ] as const;
 
 const Contact: React.FC = () => {
+  const prefersReducedMotion = useReducedMotion();
   const [formData, setFormData] = useState<ContactForm>({
     name: '',
     email: '',
@@ -94,7 +96,13 @@ const Contact: React.FC = () => {
   return (
     <section id="contact" className="section-padding bg-background">
       <div className="container">
-        <div className="max-w-4xl mx-auto">
+        <motion.div
+          className="max-w-4xl mx-auto"
+          initial={prefersReducedMotion ? false : { opacity: 0, y: 32 }}
+          whileInView={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.6, ease: [0.25, 0.1, 0.25, 1] as const }}
+        >
           {/* Section header */}
           <div className="text-center mb-12">
             <h2 className="heading-section text-foreground mb-4">
@@ -247,7 +255,7 @@ const Contact: React.FC = () => {
               </motion.button>
             </form>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

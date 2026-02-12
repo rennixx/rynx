@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import TypewriterText from '../effects/TypewriterText';
 import type { NavItem } from '../../types';
@@ -11,6 +11,7 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ navItems }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const prefersReducedMotion = useReducedMotion();
 
   const toggleMenu = () => {
@@ -25,8 +26,22 @@ const Header: React.FC<HeaderProps> = ({ navItems }) => {
     }
   };
 
+  // Track scroll position for header background
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 50);
+    onScroll(); // set initial
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-background/10 backdrop-blur-sm border-b border-transparent">
+    <header
+      className={`fixed top-0 left-0 right-0 z-50 transition-[background-color,border-color,backdrop-filter] duration-300 ${
+        scrolled
+          ? 'bg-background/80 backdrop-blur-md border-b border-border-subtle'
+          : 'bg-background/10 backdrop-blur-sm border-b border-transparent'
+      }`}
+    >
       <div className="container">
         <div className="flex items-center justify-between h-16 sm:h-20">
           {/* Logo */}

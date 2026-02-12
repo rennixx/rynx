@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { useReducedMotion } from '../../hooks/useReducedMotion';
 
 interface TrailPoint {
@@ -9,14 +9,15 @@ interface TrailPoint {
   age: number;
 }
 
+const TRAIL_CHARS = ['<', '>', '{', '}', '[', ']', '(', ')', '/', '\\', '|', '-', '_', '+', '='];
+
 const CursorTrail: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const trailPointsRef = useRef<TrailPoint[]>([]);
   const animationFrameRef = useRef<number>(0);
+  const isVisibleRef = useRef(true);
+  const hasPointsRef = useRef(false);
   const prefersReducedMotion = useReducedMotion();
-  const [isActive, setIsActive] = useState(false);
-
-  const trailChars = ['<', '>', '{', '}', '[', ']', '(', ')', '/', '\\', '|', '-', '_', '+', '='];
 
   useEffect(() => {
     if (prefersReducedMotion) return;
@@ -35,91 +36,81 @@ const CursorTrail: React.FC = () => {
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
 
-    let mouseX = 0;
-    let mouseY = 0;
+    // Pause when tab hidden
+    const handleVisibility = () => {
+      isVisibleRef.current = document.visibilityState === 'visible';
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
 
     const handleMouseMove = (e: MouseEvent) => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-      setIsActive(true);
-
-      // Add new trail point
       trailPointsRef.current.push({
-        x: mouseX + (Math.random() - 0.5) * 20,
-        y: mouseY + (Math.random() - 0.5) * 20,
+        x: e.clientX + (Math.random() - 0.5) * 20,
+        y: e.clientY + (Math.random() - 0.5) * 20,
         opacity: 0.8,
-        char: trailChars[Math.floor(Math.random() * trailChars.length)],
+        char: TRAIL_CHARS[Math.floor(Math.random() * TRAIL_CHARS.length)],
         age: 0,
       });
 
-      // Limit trail points
       if (trailPointsRef.current.length > 15) {
         trailPointsRef.current.shift();
       }
-    };
-
-    const handleMouseLeave = () => {
-      setIsActive(false);
+      hasPointsRef.current = true;
     };
 
     const animate = () => {
+      animationFrameRef.current = requestAnimationFrame(animate);
+
+      // Skip work when hidden or no points
+      if (!isVisibleRef.current) return;
+      if (!hasPointsRef.current) return;
+
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Update and draw trail points
       trailPointsRef.current = trailPointsRef.current.filter(point => {
         point.age += 1;
-        point.opacity = Math.max(0, 0.8 - (point.age * 0.05));
+        point.opacity = Math.max(0, 0.8 - point.age * 0.05);
 
         if (point.opacity > 0) {
-          ctx.font = '16px JetBrains Mono, monospace';
+          ctx.font = '16px "JetBrains Mono Variable", monospace';
           ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
-          
-          // Create gradient effect
+
           const gradient = ctx.createRadialGradient(
             point.x, point.y, 0,
             point.x, point.y, 20
           );
-          gradient.addColorStop(0, `rgba(59, 130, 246, ${point.opacity})`);
-          gradient.addColorStop(0.5, `rgba(139, 92, 246, ${point.opacity * 0.7})`);
-          gradient.addColorStop(1, `rgba(59, 130, 246, 0)`);
-          
+          // Use primary/accent-ish palette (oklch values mapped to sRGB approximations)
+          gradient.addColorStop(0, `rgba(160, 140, 255, ${point.opacity})`);
+          gradient.addColorStop(0.5, `rgba(120, 90, 230, ${point.opacity * 0.7})`);
+          gradient.addColorStop(1, `rgba(160, 140, 255, 0)`);
+
           ctx.fillStyle = gradient;
           ctx.fillText(point.char, point.x, point.y);
-          
           return true;
         }
         return false;
       });
 
-      animationFrameRef.current = requestAnimationFrame(animate);
+      hasPointsRef.current = trailPointsRef.current.length > 0;
     };
 
     document.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('mouseleave', handleMouseLeave);
-    
     animate();
 
     return () => {
       document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseleave', handleMouseLeave);
+      document.removeEventListener('visibilitychange', handleVisibility);
       window.removeEventListener('resize', resizeCanvas);
-      if (animationFrameRef.current) {
-        cancelAnimationFrame(animationFrameRef.current);
-      }
+      cancelAnimationFrame(animationFrameRef.current);
     };
-  }, [prefersReducedMotion, trailChars]);
+  }, [prefersReducedMotion]);
 
-  if (prefersReducedMotion) {
-    return null;
-  }
+  if (prefersReducedMotion) return null;
 
   return (
     <canvas
       ref={canvasRef}
-      className={`fixed inset-0 pointer-events-none z-50 transition-opacity duration-300 ${
-        isActive ? 'opacity-100' : 'opacity-0'
-      }`}
+      className="fixed inset-0 pointer-events-none z-50"
       style={{ background: 'transparent' }}
     />
   );

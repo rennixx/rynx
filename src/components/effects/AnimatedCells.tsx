@@ -18,7 +18,8 @@ interface Dot {
 const AnimatedCells: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const dotsRef = useRef<Dot[]>([]);
-  const animationFrameRef = useRef<number | null>(null);
+  const animationFrameRef = useRef<number>(0);
+  const isVisibleRef = useRef(true);
   const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
@@ -30,244 +31,173 @@ const AnimatedCells: React.FC = () => {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Initialize dots on the surface of a 3D sphere (hollow ball)
     const initDots = () => {
-      // Adaptive dot count based on screen size and performance
       const isMobile = window.innerWidth < 768;
-      const dotCount = isMobile ? 250 : 600; // Slightly fewer but bigger dots on mobile
+      const dotCount = isMobile ? 200 : 500;
       dotsRef.current = [];
-      
+
       const centerX = canvas.width / 2;
       const centerY = canvas.height / 2;
-      const centerZ = 0;
-      const sphereRadius = Math.min(canvas.width, canvas.height) * (isMobile ? 0.6 : 0.35); // Much larger on mobile for better zoom
+      const sphereRadius = Math.min(canvas.width, canvas.height) * (isMobile ? 0.6 : 0.35);
 
       for (let i = 0; i < dotCount; i++) {
-        // Generate points ONLY on the sphere surface using spherical coordinates
-        const phi = Math.random() * Math.PI * 2; // Azimuthal angle (0 to 2π)
-        const cosTheta = Math.random() * 2 - 1; // cos(polar angle) (-1 to 1)
-        const theta = Math.acos(cosTheta); // Polar angle (0 to π)
-        
-        // All dots are exactly on the surface (no random radius)
+        const phi = Math.random() * Math.PI * 2;
+        const cosTheta = Math.random() * 2 - 1;
+        const theta = Math.acos(cosTheta);
         const r = sphereRadius;
-        
-        // Convert spherical to cartesian coordinates
+
         const x3d = r * Math.sin(theta) * Math.cos(phi);
         const y3d = r * Math.sin(theta) * Math.sin(phi);
         const z3d = r * Math.cos(theta);
-        
-        const dot: Dot = {
+
+        dotsRef.current.push({
           x: centerX + x3d,
           y: centerY + y3d,
-          z: centerZ + z3d,
-          originalX: x3d, // Store relative positions (sphere surface coordinates)
+          z: z3d,
+          originalX: x3d,
           originalY: y3d,
           originalZ: z3d,
-          radius: isMobile ? Math.random() * 4 + 3 : Math.random() * 2 + 1.5, // Much bigger dots on mobile
+          radius: isMobile ? Math.random() * 4 + 3 : Math.random() * 2 + 1.5,
           pulsePhase: Math.random() * Math.PI * 2,
-          pulseSpeed: Math.random() * 0.002 + 0.0005, // Slower on mobile
-          opacity: Math.random() * 0.3 + 0.7, // Higher opacity on mobile
-          distanceFromCenter: r // All dots are at sphere radius
-        };
-        
-        dotsRef.current.push(dot);
+          pulseSpeed: Math.random() * 0.002 + 0.0005,
+          opacity: Math.random() * 0.3 + 0.7,
+          distanceFromCenter: r,
+        });
       }
-      
     };
 
     const resizeCanvas = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
-      initDots(); // Reinitialize dots when canvas resizes
+      initDots();
     };
 
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
 
-    let time = 0;
-    let frameCount = 0;
-    const animate = () => {
-      if (prefersReducedMotion) return;
+    // Pause when tab hidden
+    const handleVisibility = () => {
+      isVisibleRef.current = document.visibilityState === 'visible';
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
 
-      // Clear canvas for animation
+    let time = 0;
+
+    const animate = () => {
+      animationFrameRef.current = requestAnimationFrame(animate);
+
+      if (!isVisibleRef.current) return;
+
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       const isMobile = window.innerWidth < 768;
-      time += isMobile ? 0.006 : 0.003; // Faster on mobile, normal on desktop
-      frameCount++;
+      time += isMobile ? 0.006 : 0.003;
 
       const centerX = canvas.width / 2;
       const centerY = canvas.height / 2;
+      const rotationAngle = time * 0.1;
+      const cosRot = Math.cos(rotationAngle);
+      const sinRot = Math.sin(rotationAngle);
+      const perspective = 300;
 
-      // Rotation for 3D effect - slower on mobile
-      const rotationSpeed = isMobile ? 0.12 : 0.1; // Faster rotation on mobile
-      const rotationAngle = time * rotationSpeed;
+      // Collect visible dots
+      const visible: { x: number; y: number; r: number; o: number; s: number }[] = [];
 
-      // Performance optimization: batch similar operations
-      const visibleDots: Array<{x: number, y: number, radius: number, opacity: number, scale: number}> = [];
+      for (const dot of dotsRef.current) {
+        dot.pulsePhase += dot.pulseSpeed;
+        const pulse = Math.sin(dot.pulsePhase) * 0.03 + 0.97;
 
-      // First pass: calculate positions and filter visible dots
-      dotsRef.current.forEach((dot, index) => {
-        // Individual dot pulse animation - less frequent on mobile
-        if (frameCount % (isMobile ? 4 : 2) === 0 || index % (isMobile ? 4 : 2) === frameCount % (isMobile ? 4 : 2)) {
-          dot.pulsePhase += dot.pulseSpeed;
-        }
-        
-        // Individual dot pulsing (very subtle)
-        const individualPulse = Math.sin(dot.pulsePhase) * 0.03 + 0.97; // Less movement on mobile
-        
-        // Spherical coordinates for wave calculations
-        const phi = Math.atan2(dot.originalY, dot.originalX); // Azimuthal angle
-        const theta = Math.acos(dot.originalZ / dot.distanceFromCenter); // Polar angle
-        
-        // Water wave calculations ON THE SPHERE SURFACE - simplified for mobile
-        // Multiple wave patterns that travel across the sphere surface
-        
-        // Longitudinal waves (travel around the sphere like latitude lines)
-        const latitudeWave = Math.sin(time * (isMobile ? 2.5 : 1.5) + theta * 3) * (isMobile ? 0.12 : 0.15);
-        
-        // Meridional waves (travel from pole to pole like longitude lines)  
-        const longitudeWave = Math.sin(time * (isMobile ? 2.0 : 1.2) + phi * 2) * (isMobile ? 0.1 : 0.12);
-        
-        // Spiral waves that wrap around the sphere - simplified on mobile
+        const phi = Math.atan2(dot.originalY, dot.originalX);
+        const theta = Math.acos(dot.originalZ / dot.distanceFromCenter);
+
+        const latWave = Math.sin(time * 1.5 + theta * 3) * 0.15;
+        const lonWave = Math.sin(time * 1.2 + phi * 2) * 0.12;
         const spiralWave = isMobile ? 0 : Math.sin(time * 0.8 + theta * 2 + phi * 1.5) * 0.1;
-        
-        // Combined wave displacement - waves modify the radius slightly
-        const waveDisplacement = latitudeWave + longitudeWave + spiralWave;
-        
-        // Apply wave displacement to sphere radius (waves on surface)
-        const waveRadius = dot.distanceFromCenter * (1 + waveDisplacement);
-        
-        // Recalculate position with wave-modified radius
-        const waveX = waveRadius * Math.sin(theta) * Math.cos(phi);
-        const waveY = waveRadius * Math.sin(theta) * Math.sin(phi);
-        const waveZ = waveRadius * Math.cos(theta);
-        
-        // Apply gentle rotation to the entire sphere
-        const cosRot = Math.cos(rotationAngle);
-        const sinRot = Math.sin(rotationAngle);
-        
-        const rotatedX = waveX * cosRot - waveZ * sinRot;
-        const rotatedY = waveY;
-        const rotatedZ = waveX * sinRot + waveZ * cosRot;
-        
-        // Size effects - dots get slightly bigger at wave peaks
-        const waveIntensity = Math.abs(waveDisplacement) * 1.5 + 1; // Less intense on mobile
-        const currentRadius = dot.radius * individualPulse * waveIntensity;
-        
-        // Final position - sphere stays centered, only surface waves
-        const x3d = rotatedX;
-        const y3d = rotatedY;
-        const z3d = rotatedZ;
+        const waveDisp = latWave + lonWave + spiralWave;
+        const waveR = dot.distanceFromCenter * (1 + waveDisp);
 
-        // Keep cell centered while applying internal animations
-        const projectedX = centerX + x3d;
-        const projectedY = centerY + y3d;
-        const projectedZ = z3d;
-        
-        // Simple perspective for depth
-        const perspective = 300;
-        const scale = perspective / (perspective + projectedZ);
-        const finalX = projectedX * scale + (centerX * (1 - scale));
-        const finalY = projectedY * scale + (centerY * (1 - scale));
-        const projectedRadius = currentRadius * scale;
+        const wx = waveR * Math.sin(theta) * Math.cos(phi);
+        const wy = waveR * Math.sin(theta) * Math.sin(phi);
+        const wz = waveR * Math.cos(theta);
 
-        // Early culling: skip dots outside screen or too small
-        if (finalX < -50 || finalX > canvas.width + 50 || 
-            finalY < -50 || finalY > canvas.height + 50 ||
-            projectedRadius < (isMobile ? 0.5 : 0.3)) return;
+        const rx = wx * cosRot - wz * sinRot;
+        const ry = wy;
+        const rz = wx * sinRot + wz * cosRot;
 
-        // Calculate depth-based opacity for 3D sphere effect
-        const depthOpacity = Math.max(0.4, 1 - Math.abs(projectedZ) / 150);
-        
-        // Wave-based shimmer effect - dots shimmer at wave peaks (simplified on mobile)
-        const waveShimmer = isMobile ? 0.8 : Math.sin(time * 4 + phi * 2 + theta * 3) * 0.4 + 0.6;
-        
-        // Wave brightness - dots get brighter at wave peaks
-        const waveBrightness = 1 + Math.abs(waveDisplacement) * (isMobile ? 2 : 3);
-        
-        // Surface lighting effect - dots facing "forward" are brighter
-        const lightingEffect = Math.max(0.5, (projectedZ + 150) / 300);
-        
-        const finalOpacity = Math.min(1, dot.opacity * depthOpacity * waveShimmer * waveBrightness * lightingEffect);
+        const currentRadius = dot.radius * pulse * (Math.abs(waveDisp) * 1.5 + 1);
+        const scale = perspective / (perspective + rz);
+        const fx = centerX + rx * scale + centerX * (1 - scale);
+        const fy = centerY + ry * scale + centerY * (1 - scale);
+        const fr = currentRadius * scale;
 
-        visibleDots.push({
-          x: finalX,
-          y: finalY,
-          radius: projectedRadius,
-          opacity: finalOpacity,
-          scale
-        });
-      });
+        if (fx < -50 || fx > canvas.width + 50 || fy < -50 || fy > canvas.height + 50 || fr < 0.3) continue;
 
-      // Sort by depth for proper rendering (only visible dots)
-      visibleDots.sort((a, b) => a.scale - b.scale);
+        const depthO = Math.max(0.4, 1 - Math.abs(rz) / 150);
+        const shimmer = isMobile ? 0.8 : Math.sin(time * 4 + phi * 2 + theta * 3) * 0.4 + 0.6;
+        const bright = 1 + Math.abs(waveDisp) * (isMobile ? 2 : 3);
+        const light = Math.max(0.5, (rz + 150) / 300);
+        const finalO = Math.min(1, dot.opacity * depthO * shimmer * bright * light);
 
-      // Second pass: render visible dots with water-like effects
-      visibleDots.forEach((dot, index) => {
-        // Water-like glow with gentle shimmer
-        const glowRadius = dot.radius * (isMobile ? 4 : 4); // Bigger glow on mobile for better visibility
-        
-        const gradient = ctx.createRadialGradient(
-          dot.x, dot.y, 0,
-          dot.x, dot.y, glowRadius
-        );
-        
-        // Water sphere colors - much brighter and more visible
-        const waveHeight = Math.sin(time * (isMobile ? 1.5 : 2) + index * 0.1) * 0.2; // Simpler wave on mobile
-        const baseBlue = 150 + Math.abs(waveHeight) * 80; // Much brighter blue
-        const baseGreen = 220 + Math.abs(waveHeight) * 35; // Much brighter green
-        
-        gradient.addColorStop(0, `rgba(34, ${baseGreen}, ${baseBlue}, ${dot.opacity * 0.9})`);
-        gradient.addColorStop(0.4, `rgba(34, ${baseGreen}, ${baseBlue}, ${dot.opacity * 0.6})`);
-        gradient.addColorStop(0.8, `rgba(34, 197, 94, ${dot.opacity * 0.3})`);
-        gradient.addColorStop(1, 'rgba(34, 197, 94, 0)');
-        
+        visible.push({ x: fx, y: fy, r: fr, o: finalO, s: scale });
+      }
+
+      // Sort back-to-front
+      visible.sort((a, b) => a.s - b.s);
+
+      // Render — use accent-aligned palette (violet/indigo tones matching design tokens)
+      for (let i = 0; i < visible.length; i++) {
+        const d = visible[i];
+        const waveH = Math.sin(time * 2 + i * 0.1) * 0.2;
+
+        // Accent palette: violet/indigo tones
+        const r = 130 + Math.abs(waveH) * 30;
+        const g = 100 + Math.abs(waveH) * 40;
+        const b = 220 + Math.abs(waveH) * 35;
+
+        const glowR = d.r * 4;
+        const gradient = ctx.createRadialGradient(d.x, d.y, 0, d.x, d.y, glowR);
+        gradient.addColorStop(0, `rgba(${r}, ${g}, ${b}, ${d.o * 0.9})`);
+        gradient.addColorStop(0.4, `rgba(${r}, ${g}, ${b}, ${d.o * 0.5})`);
+        gradient.addColorStop(0.8, `rgba(${r - 20}, ${g - 10}, ${b}, ${d.o * 0.2})`);
+        gradient.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0)`);
         ctx.fillStyle = gradient;
         ctx.beginPath();
-        ctx.arc(dot.x, dot.y, glowRadius, 0, Math.PI * 2);
+        ctx.arc(d.x, d.y, glowR, 0, Math.PI * 2);
         ctx.fill();
 
-        // Main dot with water shimmer - much brighter
-        const brightness = 0.95 + Math.sin(time * (isMobile ? 3 : 4) + index * 0.2) * 0.05;
-        ctx.fillStyle = `rgba(34, ${baseGreen}, ${baseBlue}, ${Math.min(1, dot.opacity * brightness)})`;
+        // Core dot
+        ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${Math.min(1, d.o * 0.95)})`;
         ctx.beginPath();
-        ctx.arc(dot.x, dot.y, dot.radius, 0, Math.PI * 2);
+        ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
         ctx.fill();
 
-        // Very bright center with water-like sparkle
-        const centerShimmer = 0.8 + Math.sin(time * (isMobile ? 4 : 6) + index * 0.3) * 0.2;
-        ctx.fillStyle = `rgba(255, 255, 255, ${Math.min(1, dot.opacity * centerShimmer)})`;
+        // Bright center
+        ctx.fillStyle = `rgba(220, 210, 255, ${Math.min(1, d.o * 0.8)})`;
         ctx.beginPath();
-        ctx.arc(dot.x, dot.y, dot.radius * 0.5, 0, Math.PI * 2);
+        ctx.arc(d.x, d.y, d.r * 0.4, 0, Math.PI * 2);
         ctx.fill();
-      });
-
-      animationFrameRef.current = requestAnimationFrame(animate);
+      }
     };
 
     animate();
 
     return () => {
       window.removeEventListener('resize', resizeCanvas);
-      if (animationFrameRef.current) {
-        cancelAnimationFrame(animationFrameRef.current);
-      }
+      document.removeEventListener('visibilitychange', handleVisibility);
+      cancelAnimationFrame(animationFrameRef.current);
     };
   }, [prefersReducedMotion]);
 
-  if (prefersReducedMotion) {
-    return null;
-  }
+  if (prefersReducedMotion) return null;
 
   return (
     <canvas
       ref={canvasRef}
       className="fixed inset-0 pointer-events-none z-0 opacity-80"
-      style={{ 
+      style={{
         background: 'transparent',
-        willChange: 'transform', // Optimize for animations
-        transform: 'translateZ(0)' // Force hardware acceleration
+        willChange: 'transform',
+        transform: 'translateZ(0)',
       }}
     />
   );
