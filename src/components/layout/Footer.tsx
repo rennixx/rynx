@@ -27,7 +27,7 @@ const Footer: React.FC = () => {
   ];
 
   return (
-    <footer className="bg-background border-t border-border-subtle">
+    <footer className="bg-background border-t border-border-subtle" aria-label="Site footer">
       <div className="container section-padding">
         <div className="flex flex-col items-center space-y-6">
           {/* Social Links */}

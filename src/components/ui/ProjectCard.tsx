@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 // import { useQuery } from '@tanstack/react-query';
-import AnimatedButton from './AnimatedButton';
 import LoadingSpinner from '../common/LoadingSpinner';
 import { useGitHubRepoStats } from '../../hooks/useGitHubData';
 import type { Project } from '../../data/portfolioData';
@@ -110,6 +109,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
               <img
                 src={project.imageUrl}
                 alt={project.title}
+                loading="lazy"
                 className={`w-full h-full object-cover transition-opacity duration-300 ${
                   imageLoaded ? 'opacity-100' : 'opacity-0'
                 }`}
@@ -265,23 +265,26 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
           {/* Project Links */}
           <div className="flex gap-3">
             {project.liveUrl && (
-              <AnimatedButton
-                effect="magnetic"
-                size="sm"
-                onClick={() => window.open(project.liveUrl, '_blank')}
+              <a
+                href={project.liveUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center rounded-full font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 bg-foreground text-background hover:bg-foreground/90 active:bg-foreground/80 px-4 py-2 text-sm"
               >
                 Live Demo
-              </AnimatedButton>
+                <span className="sr-only"> (opens in new tab)</span>
+              </a>
             )}
             {project.githubUrl && (
-              <AnimatedButton
-                variant="outline"
-                effect="glitch"
-                size="sm"
-                onClick={() => window.open(project.githubUrl, '_blank')}
+              <a
+                href={project.githubUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center rounded-full font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-2 border-foreground text-foreground hover:bg-foreground hover:text-background active:bg-foreground/90 px-4 py-2 text-sm"
               >
                 View Code
-              </AnimatedButton>
+                <span className="sr-only"> (opens in new tab)</span>
+              </a>
             )}
           </div>
         </div>

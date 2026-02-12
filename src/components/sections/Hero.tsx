@@ -112,6 +112,7 @@ const Hero: React.FC = () => {
             target="_blank"
             rel="noopener noreferrer"
             className={badgeCls(item.highlight)}
+            aria-label={item.label}
           >
             {item.icon}
             {item.label}

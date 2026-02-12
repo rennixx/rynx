@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import TypewriterText from '../effects/TypewriterText';
 import type { NavItem } from '../../types';
@@ -13,18 +13,35 @@ const Header: React.FC<HeaderProps> = ({ navItems }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const prefersReducedMotion = useReducedMotion();
+  const menuToggleRef = useRef<HTMLButtonElement>(null);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  const closeMenu = useCallback(() => {
+    setIsMenuOpen(false);
+    // Return focus to the toggle button when closing
+    menuToggleRef.current?.focus();
+  }, []);
+
   const scrollToSection = (href: string) => {
     const element = document.querySelector(href);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
-      setIsMenuOpen(false);
+      closeMenu();
     }
   };
+
+  // Close mobile menu on Escape key
+  useEffect(() => {
+    if (!isMenuOpen) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') closeMenu();
+    };
+    document.addEventListener('keydown', onKeyDown);
+    return () => document.removeEventListener('keydown', onKeyDown);
+  }, [isMenuOpen, closeMenu]);
 
   // Track scroll position for header background
   useEffect(() => {
@@ -86,7 +103,7 @@ const Header: React.FC<HeaderProps> = ({ navItems }) => {
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8" role="navigation">
+          <nav className="hidden md:flex items-center space-x-8" role="navigation" aria-label="Main navigation">
             {navItems.map((item, index) => (
               prefersReducedMotion ? (
                 <button
@@ -123,6 +140,7 @@ const Header: React.FC<HeaderProps> = ({ navItems }) => {
           {/* Mobile menu button */}
           {prefersReducedMotion ? (
             <button
+              ref={menuToggleRef}
               onClick={toggleMenu}
               className="md:hidden p-2 rounded-md text-text-secondary hover:text-foreground hover:bg-surface-2 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 transition-colors duration-200"
               aria-expanded={isMenuOpen}
@@ -155,6 +173,7 @@ const Header: React.FC<HeaderProps> = ({ navItems }) => {
             </button>
           ) : (
             <motion.button
+              ref={menuToggleRef}
               onClick={toggleMenu}
               className="md:hidden p-2 rounded-md text-text-secondary hover:text-foreground hover:bg-surface-2 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 transition-colors duration-200 relative"
               aria-expanded={isMenuOpen}
@@ -251,6 +270,7 @@ const Header: React.FC<HeaderProps> = ({ navItems }) => {
             id="mobile-menu"
             className="md:hidden bg-background/95 backdrop-blur-lg border-t border-border-subtle"
             role="navigation"
+            aria-label="Mobile navigation"
           >
             <div className="container py-4">
               <div className="flex flex-col space-y-4">
@@ -274,6 +294,7 @@ const Header: React.FC<HeaderProps> = ({ navItems }) => {
               id="mobile-menu"
               className="md:hidden bg-background/95 backdrop-blur-lg border-t border-border-subtle"
               role="navigation"
+              aria-label="Mobile navigation"
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}

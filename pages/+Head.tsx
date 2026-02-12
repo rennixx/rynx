@@ -3,6 +3,10 @@ export function Head() {
     <>
       {/* Primary SEO Meta Tags */}
       <meta
+        name="description"
+        content="RYNX — Full-Stack Developer specialising in React, TypeScript & Node.js. Explore selected projects, skills, and get in touch."
+      />
+      <meta
         name="keywords"
         content="Full-Stack Developer, React Developer, TypeScript Developer, Node.js Developer, Software Engineer, Web Developer, Frontend Developer, Backend Developer, Mobile App Developer, Erbil Developer, Kurdistan Developer, JavaScript Developer, Web Development, Software Development, Custom Software, Web Applications, Mobile Applications, API Development, Database Design, DevOps, UI/UX Design"
       />
@@ -25,6 +29,10 @@ export function Head() {
       <meta property="og:url" content="https://rynx.dev" />
       <meta property="og:site_name" content="RYNX Portfolio" />
       <meta property="og:locale" content="en_US" />
+      <meta property="og:image" content="https://rynx.dev/og-image.png" />
+      <meta property="og:image:width" content="1200" />
+      <meta property="og:image:height" content="630" />
+      <meta property="og:image:alt" content="RYNX — Full-Stack Developer" />
 
       {/* Twitter Card Tags */}
       <meta name="twitter:card" content="summary_large_image" />
@@ -38,6 +46,12 @@ export function Head() {
       />
       <meta name="twitter:site" content="@rynxdev" />
       <meta name="twitter:creator" content="@rynxdev" />
+      <meta name="twitter:image" content="https://rynx.dev/og-image.png" />
+      <meta name="twitter:image:alt" content="RYNX — Full-Stack Developer" />
+
+      {/* Preconnect hints */}
+      <link rel="preconnect" href="https://api.github.com" />
+      <link rel="preconnect" href="https://opengraph.githubassets.com" />
 
       {/* Additional SEO */}
       <link rel="canonical" href="https://rynx.dev" />

@@ -123,6 +123,7 @@ const Contact: React.FC = () => {
                 target={link.href.startsWith('http') ? '_blank' : undefined}
                 rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
                 className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg border border-border-default bg-surface-1 text-text-secondary hover:text-foreground hover:border-border-strong transition-colors text-sm"
+                aria-label={link.label}
               >
                 {link.icon}
                 {link.value}
@@ -253,6 +254,13 @@ const Contact: React.FC = () => {
                   )}
                 </AnimatePresence>
               </motion.button>
+
+              {/* Screen reader status announcements */}
+              <div className="sr-only" role="status" aria-live="polite">
+                {formState === 'loading' && 'Sending your message...'}
+                {formState === 'success' && 'Message sent successfully!'}
+                {formState === 'error' && 'Failed to send message. Please try again.'}
+              </div>
             </form>
           </div>
         </motion.div>
