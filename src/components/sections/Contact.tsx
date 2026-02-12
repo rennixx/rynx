@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Input, TextArea } from '../ui';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import { sendContactEmail } from '../../services/emailService';
 import type { ContactForm } from '../../types';
 
@@ -170,45 +171,57 @@ const Contact: React.FC = () => {
 
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid sm:grid-cols-2 gap-6">
-                  <Input
-                    label="Name"
-                    type="text"
-                    value={formData.name}
-                    onChange={(value) => handleInputChange('name', value)}
-                    error={errors.name}
-                    required
-                    placeholder="Your name"
-                  />
-                  <Input
-                    label="Email"
-                    type="email"
-                    value={formData.email}
-                    onChange={(value) => handleInputChange('email', value)}
-                    error={errors.email}
-                    required
-                    placeholder="your@email.com"
-                  />
+                  <div className="space-y-2">
+                    <label htmlFor="name" className="text-sm font-medium text-gray-300">Name <span className="text-red-400">*</span></label>
+                    <Input
+                      id="name"
+                      type="text"
+                      value={formData.name}
+                      onChange={(e) => handleInputChange('name', e.target.value)}
+                      placeholder="Your name"
+                      className={errors.name ? 'border-red-500' : ''}
+                    />
+                    {errors.name && <p className="text-sm text-red-400" role="alert">{errors.name}</p>}
+                  </div>
+                  <div className="space-y-2">
+                    <label htmlFor="email" className="text-sm font-medium text-gray-300">Email <span className="text-red-400">*</span></label>
+                    <Input
+                      id="email"
+                      type="email"
+                      value={formData.email}
+                      onChange={(e) => handleInputChange('email', e.target.value)}
+                      placeholder="your@email.com"
+                      className={errors.email ? 'border-red-500' : ''}
+                    />
+                    {errors.email && <p className="text-sm text-red-400" role="alert">{errors.email}</p>}
+                  </div>
                 </div>
 
-                <Input
-                  label="Subject"
-                  type="text"
-                  value={formData.subject}
-                  onChange={(value) => handleInputChange('subject', value)}
-                  error={errors.subject}
-                  required
-                  placeholder="What's this about?"
-                />
+                <div className="space-y-2">
+                  <label htmlFor="subject" className="text-sm font-medium text-gray-300">Subject <span className="text-red-400">*</span></label>
+                  <Input
+                    id="subject"
+                    type="text"
+                    value={formData.subject}
+                    onChange={(e) => handleInputChange('subject', e.target.value)}
+                    placeholder="What's this about?"
+                    className={errors.subject ? 'border-red-500' : ''}
+                  />
+                  {errors.subject && <p className="text-sm text-red-400" role="alert">{errors.subject}</p>}
+                </div>
 
-                <TextArea
-                  label="Message"
-                  value={formData.message}
-                  onChange={(value) => handleInputChange('message', value)}
-                  error={errors.message}
-                  required
-                  rows={6}
-                  placeholder="Tell me about your project or idea..."
-                />
+                <div className="space-y-2">
+                  <label htmlFor="message" className="text-sm font-medium text-gray-300">Message <span className="text-red-400">*</span></label>
+                  <Textarea
+                    id="message"
+                    value={formData.message}
+                    onChange={(e) => handleInputChange('message', e.target.value)}
+                    rows={6}
+                    placeholder="Tell me about your project or idea..."
+                    className={errors.message ? 'border-red-500' : ''}
+                  />
+                  {errors.message && <p className="text-sm text-red-400" role="alert">{errors.message}</p>}
+                </div>
 
                 <motion.button
                   type="submit"

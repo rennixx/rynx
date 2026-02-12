@@ -1,63 +1,18 @@
-import { forwardRef } from 'react';
-import type { TextAreaProps } from '../../types';
+import * as React from "react"
 
-const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
-  ({
-    label,
-    placeholder,
-    value,
-    onChange,
-    required = false,
-    disabled = false,
-    error,
-    rows = 4,
-    className = '',
-    ...props
-  }, ref) => {
-    const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-      if (onChange) {
-        onChange(e.target.value);
-      }
-    };
+import { cn } from "@/lib/utils"
 
-    const textAreaClasses = `
-      w-full px-4 py-3 border border-gray-600 rounded-lg resize-vertical bg-black text-white
-      focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent
-      disabled:bg-gray-700 disabled:cursor-not-allowed
-      transition-colors duration-200
-      ${error ? 'border-red-500 focus:ring-red-400' : ''}
-      ${className}
-    `;
+function Textarea({ className, ...props }: React.ComponentProps<"textarea">) {
+  return (
+    <textarea
+      data-slot="textarea"
+      className={cn(
+        "border-input placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 flex field-sizing-content min-h-16 w-full rounded-md border bg-transparent px-3 py-2 text-base shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
+        className
+      )}
+      {...props}
+    />
+  )
+}
 
-    return (
-      <div className="space-y-2">
-        {label && (
-          <label className="block text-sm font-medium text-gray-300">
-            {label}
-            {required && <span className="text-red-500 ml-1">*</span>}
-          </label>
-        )}
-        <textarea
-          ref={ref}
-          placeholder={placeholder}
-          value={value}
-          onChange={handleChange}
-          required={required}
-          disabled={disabled}
-          rows={rows}
-          className={textAreaClasses}
-          {...props}
-        />
-        {error && (
-          <p className="text-sm text-red-600" role="alert">
-            {error}
-          </p>
-        )}
-      </div>
-    );
-  }
-);
-
-TextArea.displayName = 'TextArea';
-
-export default TextArea;
+export { Textarea }

@@ -3,7 +3,6 @@ import QueryProvider from './providers/QueryProvider';
 import ErrorBoundary from './components/common/ErrorBoundary';
 import { Header, Footer } from './components/layout';
 import { Hero, About, Skills, Projects, Contact } from './components/sections';
-// import { MatrixRain, ParticleSystem, NeuralNetwork, DNAHelix } from './components/background';
 import { CursorTrail } from './components/effects';
 import { SmoothScroll } from './components/animations';
 import { useReducedMotion } from './hooks/useReducedMotion';
@@ -12,7 +11,6 @@ import { Analytics } from '@vercel/analytics/react';
 import { injectSpeedInsights } from '@vercel/speed-insights';
 
 const App: React.FC = () => {
-  // const [backgroundEffect, setBackgroundEffect] = useState<'matrix' | 'particles' | 'neural' | 'dna' | 'none'>('particles');
   const [isLoaded, setIsLoaded] = useState(false);
   const prefersReducedMotion = useReducedMotion();
 
@@ -39,13 +37,6 @@ const App: React.FC = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  
-
-  const renderBackgroundEffect = () => {
-    // All background animations removed
-    return null;
-  };
-
   if (!isLoaded) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
@@ -62,9 +53,14 @@ const App: React.FC = () => {
       <QueryProvider>
         <SmoothScroll enabled={!prefersReducedMotion}>
           <div className="min-h-screen bg-black relative">
-            {/* Background Effects */}
-            {renderBackgroundEffect()}
-            
+            {/* Skip to content link for accessibility */}
+            <a
+              href="#main-content"
+              className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-white focus:text-black focus:rounded-md focus:text-sm focus:font-medium"
+            >
+              Skip to main content
+            </a>
+
             {/* Cursor Trail */}
             <CursorTrail />
 
@@ -72,7 +68,7 @@ const App: React.FC = () => {
             <div className="relative z-10">
               <Header navItems={navItems} />
               
-              <main>
+              <main id="main-content">
                 <Hero />
                 <About />
                 <Skills />
@@ -83,7 +79,6 @@ const App: React.FC = () => {
               <Footer />
             </div>
 
-            {/* Background Effect Indicator - Removed */}
             <Analytics />
           </div>
         </SmoothScroll>

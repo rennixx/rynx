@@ -48,10 +48,12 @@ export interface Project {
 }
 
 export interface Skill {
-  id: string;
   name: string;
-  category: 'frontend' | 'backend' | 'tools' | 'design';
-  level?: 'beginner' | 'intermediate' | 'advanced' | 'expert';
+  level: number; // 1-100
+  category: 'frontend' | 'backend' | 'database' | 'devops' | 'design' | 'tool';
+  yearsOfExperience: number;
+  icon?: string;
+  color?: string;
 }
 
 export interface ContactForm {

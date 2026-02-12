@@ -32,8 +32,6 @@ const AnimatedCells: React.FC = () => {
 
     // Initialize dots on the surface of a 3D sphere (hollow ball)
     const initDots = () => {
-      console.log('🔬 Initializing 3D sphere surface with water waves...');
-      
       // Adaptive dot count based on screen size and performance
       const isMobile = window.innerWidth < 768;
       const dotCount = isMobile ? 250 : 600; // Slightly fewer but bigger dots on mobile
@@ -75,7 +73,6 @@ const AnimatedCells: React.FC = () => {
         dotsRef.current.push(dot);
       }
       
-      console.log(`✅ Created ${dotsRef.current.length} dots for the cell (${isMobile ? 'Mobile' : 'Desktop'} optimized)`);
     };
 
     const resizeCanvas = () => {
@@ -90,10 +87,7 @@ const AnimatedCells: React.FC = () => {
     let time = 0;
     let frameCount = 0;
     const animate = () => {
-      if (prefersReducedMotion) {
-        console.log('❌ Reduced motion is ON - animation disabled');
-        return;
-      }
+      if (prefersReducedMotion) return;
 
       // Clear canvas for animation
       ctx.clearRect(0, 0, canvas.width, canvas.height);

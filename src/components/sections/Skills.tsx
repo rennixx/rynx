@@ -1,7 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { skills } from '../../data/portfolioData';
-// import { AnimatedSkills } from '../animations';
 import { useReducedMotion } from '../../hooks/useReducedMotion';
 
 const Skills: React.FC = () => {

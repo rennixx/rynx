@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Button } from '../ui';
+import { Button } from '@/components/ui/button';
 import AnimatedButton from '../ui/AnimatedButton';
 import AnimatedCells from '../effects/AnimatedCells';
 
@@ -53,7 +53,7 @@ const Hero: React.FC = () => {
             {/* Stats Row */}
             
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
-              <Button variant="solid" size="lg" onClick={() => scrollToSection('#projects')}>
+              <Button variant="default" size="lg" onClick={() => scrollToSection('#projects')}>
                 View My Work
               </Button>
               <Button variant="outline" size="lg" onClick={() => scrollToSection('#contact')}>
