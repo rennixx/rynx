@@ -63,6 +63,22 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+  --color-surface-1: var(--surface-1);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-tertiary: var(--text-tertiary);
+  --color-text-muted: var(--text-muted);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+  --color-border-subtle: var(--border-subtle);
+  --color-border-default: var(--border-default);
+  --color-border-strong: var(--border-strong);
 }
 
 /* ===== Dark-first Color Scheme ===== */
@@ -92,6 +108,32 @@
   --chart-3: oklch(0.769 0.188 70.08);
   --chart-4: oklch(0.627 0.265 303.9);
   --chart-5: oklch(0.645 0.246 16.439);
+
+  /* Semantic surface tokens */
+  --surface-1: oklch(0.12 0 0);
+  --surface-2: oklch(0.16 0 0);
+  --surface-3: oklch(0.20 0 0);
+
+  /* Text hierarchy */
+  --text-primary: oklch(0.985 0 0);
+  --text-secondary: oklch(0.75 0 0);
+  --text-tertiary: oklch(0.60 0 0);
+  --text-muted: oklch(0.50 0 0);
+
+  /* Status colors */
+  --success: oklch(0.696 0.17 162.48);
+  --success-foreground: oklch(0.07 0 0);
+  --warning: oklch(0.769 0.188 70.08);
+  --warning-foreground: oklch(0.07 0 0);
+  --info: oklch(0.623 0.214 259);
+  --info-foreground: oklch(0.985 0 0);
+
+  /* Border hierarchy */
+  --border-subtle: oklch(1 0 0 / 6%);
+  --border-default: oklch(1 0 0 / 10%);
+  --border-strong: oklch(1 0 0 / 16%);
+
+  /* Sidebar */
   --sidebar: oklch(0.1 0 0);
   --sidebar-foreground: oklch(0.985 0 0);
   --sidebar-primary: oklch(0.546 0.245 275);
@@ -160,6 +202,48 @@
     .section-padding {
       padding-top: 6rem;
       padding-bottom: 6rem;
+    }
+  }
+
+  /* Section heading — reusable across all sections */
+  .heading-section {
+    font-size: 1.875rem; /* text-3xl */
+    line-height: 2.25rem;
+    font-weight: 700;
+  }
+
+  @media (min-width: 640px) {
+    .heading-section {
+      font-size: 2.25rem; /* text-4xl */
+      line-height: 2.5rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .heading-section {
+      font-size: 3rem; /* text-5xl */
+      line-height: 1.15;
+    }
+  }
+
+  /* Hero heading — larger variant */
+  .heading-hero {
+    font-size: 2.25rem; /* text-4xl */
+    line-height: 2.5rem;
+    font-weight: 700;
+  }
+
+  @media (min-width: 640px) {
+    .heading-hero {
+      font-size: 3rem; /* text-5xl */
+      line-height: 1.15;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .heading-hero {
+      font-size: 3.75rem; /* text-6xl */
+      line-height: 1.1;
     }
   }
 

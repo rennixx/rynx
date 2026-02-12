@@ -112,15 +112,15 @@ const Contact: React.FC = () => {
   ];
 
   return (
-    <section id="contact" className="section-padding bg-black">
+    <section id="contact" className="section-padding bg-background">
       <div className="container">
         <div className="max-w-6xl mx-auto">
           {/* Section Header */}
           <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4">
+            <h2 className="heading-section text-foreground mb-4">
               Get In Touch
             </h2>
-            <p className="text-lg text-gray-300 max-w-3xl mx-auto text-balance">
+            <p className="text-lg text-text-secondary max-w-3xl mx-auto text-balance">
               Have a project in mind or just want to chat? I'd love to hear from you. 
               Let's work together to bring your ideas to life.
             </p>
@@ -130,10 +130,10 @@ const Contact: React.FC = () => {
             {/* Contact Info */}
             <div className="space-y-8">
               <div>
-                <h3 className="text-2xl font-bold text-white mb-6">
+                <h3 className="text-2xl font-bold text-foreground mb-6">
                   Let's Connect
                 </h3>
-                <p className="text-gray-300 mb-8 leading-relaxed">
+                <p className="text-text-secondary mb-8 leading-relaxed">
                   I'm always interested in new opportunities and exciting projects. 
                   Whether you're a company looking to hire, or you're someone with an 
                   idea you'd like to discuss, feel free to reach out.
@@ -145,16 +145,16 @@ const Contact: React.FC = () => {
                   <a
                     key={index}
                     href={item.href}
-                    className="flex items-center gap-4 p-4 rounded-lg hover:bg-gray-800 transition-colors duration-200 group focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2"
+                    className="flex items-center gap-4 p-4 rounded-lg hover:bg-surface-2 transition-colors duration-200 group focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
                   >
-                    <div className="text-gray-400 group-hover:text-white transition-colors duration-200">
+                    <div className="text-text-tertiary group-hover:text-foreground transition-colors duration-200">
                       {item.icon}
                     </div>
                     <div>
-                      <div className="text-sm text-gray-400 mb-1">
+                      <div className="text-sm text-text-tertiary mb-1">
                         {item.label}
                       </div>
-                      <div className="text-white font-medium">
+                      <div className="text-foreground font-medium">
                         {item.value}
                       </div>
                     </div>
@@ -164,63 +164,63 @@ const Contact: React.FC = () => {
             </div>
 
             {/* Contact Form */}
-            <div className="bg-black p-8 rounded-2xl border border-gray-700">
-              <h3 className="text-2xl font-bold text-white mb-6">
+            <div className="bg-background p-8 rounded-2xl border border-border-default">
+              <h3 className="text-2xl font-bold text-foreground mb-6">
                 Send a Message
               </h3>
 
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid sm:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <label htmlFor="name" className="text-sm font-medium text-gray-300">Name <span className="text-red-400">*</span></label>
+                    <label htmlFor="name" className="text-sm font-medium text-text-secondary">Name <span className="text-destructive">*</span></label>
                     <Input
                       id="name"
                       type="text"
                       value={formData.name}
                       onChange={(e) => handleInputChange('name', e.target.value)}
                       placeholder="Your name"
-                      className={errors.name ? 'border-red-500' : ''}
+                      className={errors.name ? 'border-destructive' : ''}
                     />
-                    {errors.name && <p className="text-sm text-red-400" role="alert">{errors.name}</p>}
+                    {errors.name && <p className="text-sm text-destructive" role="alert">{errors.name}</p>}
                   </div>
                   <div className="space-y-2">
-                    <label htmlFor="email" className="text-sm font-medium text-gray-300">Email <span className="text-red-400">*</span></label>
+                    <label htmlFor="email" className="text-sm font-medium text-text-secondary">Email <span className="text-destructive">*</span></label>
                     <Input
                       id="email"
                       type="email"
                       value={formData.email}
                       onChange={(e) => handleInputChange('email', e.target.value)}
                       placeholder="your@email.com"
-                      className={errors.email ? 'border-red-500' : ''}
+                      className={errors.email ? 'border-destructive' : ''}
                     />
-                    {errors.email && <p className="text-sm text-red-400" role="alert">{errors.email}</p>}
+                    {errors.email && <p className="text-sm text-destructive" role="alert">{errors.email}</p>}
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <label htmlFor="subject" className="text-sm font-medium text-gray-300">Subject <span className="text-red-400">*</span></label>
+                  <label htmlFor="subject" className="text-sm font-medium text-text-secondary">Subject <span className="text-destructive">*</span></label>
                   <Input
                     id="subject"
                     type="text"
                     value={formData.subject}
                     onChange={(e) => handleInputChange('subject', e.target.value)}
                     placeholder="What's this about?"
-                    className={errors.subject ? 'border-red-500' : ''}
+                    className={errors.subject ? 'border-destructive' : ''}
                   />
-                  {errors.subject && <p className="text-sm text-red-400" role="alert">{errors.subject}</p>}
+                  {errors.subject && <p className="text-sm text-destructive" role="alert">{errors.subject}</p>}
                 </div>
 
                 <div className="space-y-2">
-                  <label htmlFor="message" className="text-sm font-medium text-gray-300">Message <span className="text-red-400">*</span></label>
+                  <label htmlFor="message" className="text-sm font-medium text-text-secondary">Message <span className="text-destructive">*</span></label>
                   <Textarea
                     id="message"
                     value={formData.message}
                     onChange={(e) => handleInputChange('message', e.target.value)}
                     rows={6}
                     placeholder="Tell me about your project or idea..."
-                    className={errors.message ? 'border-red-500' : ''}
+                    className={errors.message ? 'border-destructive' : ''}
                   />
-                  {errors.message && <p className="text-sm text-red-400" role="alert">{errors.message}</p>}
+                  {errors.message && <p className="text-sm text-destructive" role="alert">{errors.message}</p>}
                 </div>
 
                 <motion.button
@@ -230,10 +230,10 @@ const Contact: React.FC = () => {
                     formState === 'idle' 
                       ? 'bg-transparent border-white/30 text-white hover:bg-white/10 hover:border-white/50 backdrop-blur-sm' 
                       : formState === 'loading'
-                      ? 'bg-blue-500/20 border-blue-400 text-blue-300 backdrop-blur-sm'
+                      ? 'bg-info/20 border-info text-info backdrop-blur-sm'
                       : formState === 'success'
-                      ? 'bg-green-500/20 border-green-400 text-green-300 backdrop-blur-sm'
-                      : 'bg-red-500/20 border-red-400 text-red-300 backdrop-blur-sm'
+                      ? 'bg-success/20 border-success text-success backdrop-blur-sm'
+                      : 'bg-destructive/20 border-destructive text-destructive backdrop-blur-sm'
                   }`}
                   whileTap={{ scale: 0.98 }}
                   whileHover={formState === 'idle' ? { 

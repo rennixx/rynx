@@ -24,12 +24,12 @@ const AnimatedButton = forwardRef<HTMLButtonElement, AnimatedButtonProps>(
     const magnetRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
     const prefersReducedMotion = useReducedMotion();
 
-    const baseClasses = 'relative inline-flex items-center justify-center rounded-full font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed overflow-hidden';
+    const baseClasses = 'relative inline-flex items-center justify-center rounded-full font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed overflow-hidden';
     
     const variantClasses = {
-      solid: 'bg-white text-black hover:bg-gray-200 active:bg-gray-300',
-      outline: 'border-2 border-white text-white hover:bg-white hover:text-black active:bg-gray-200',
-      ghost: 'text-white hover:bg-gray-800 active:bg-gray-700',
+      solid: 'bg-foreground text-background hover:bg-foreground/90 active:bg-foreground/80',
+      outline: 'border-2 border-foreground text-foreground hover:bg-foreground hover:text-background active:bg-foreground/90',
+      ghost: 'text-foreground hover:bg-surface-2 active:bg-surface-3',
     };
     
     const sizeClasses = {

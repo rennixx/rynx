@@ -33,7 +33,7 @@ class ErrorBoundary extends Component<Props, State> {
 
       return (
         <motion.div
-          className="min-h-screen flex items-center justify-center bg-black text-white p-8"
+          className="min-h-screen flex items-center justify-center bg-background text-foreground p-8"
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5 }}
@@ -58,16 +58,16 @@ class ErrorBoundary extends Component<Props, State> {
               &lt;Error /&gt;
             </h1>
             
-            <p className="text-gray-300 mb-6">
+            <p className="text-text-secondary mb-6">
               Something unexpected happened. The error has been logged and we're working on a fix.
             </p>
             
             {import.meta.env.DEV && this.state.error && (
-              <details className="text-left bg-gray-900 p-4 rounded-lg mb-6 text-sm">
-                <summary className="cursor-pointer text-red-400 font-mono mb-2">
+              <details className="text-left bg-surface-1 p-4 rounded-lg mb-6 text-sm">
+                <summary className="cursor-pointer text-destructive font-mono mb-2">
                   Debug Info (Development Only)
                 </summary>
-                <pre className="text-red-300 whitespace-pre-wrap">
+                <pre className="text-destructive/80 whitespace-pre-wrap">
                   {this.state.error.stack}
                 </pre>
               </details>

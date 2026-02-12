@@ -36,17 +36,17 @@ const Hero: React.FC = () => {
 
   if (prefersReducedMotion) {
     return (
-      <section id="hero" className="min-h-screen flex items-center justify-center bg-black relative overflow-hidden">
+      <section id="hero" className="min-h-screen flex items-center justify-center bg-background relative overflow-hidden">
         <AnimatedCells />
         <div className="container relative z-10">
           <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6">
+            <h1 className="heading-hero text-foreground mb-6">
               <span className="block">Hi, I'm</span>
-              <span className="block text-gray-400 font-mono">
+              <span className="block text-text-tertiary font-mono">
                 &lt;{personalInfo.name.split(' ')[0]} /&gt;
               </span>
             </h1>
-            <p className="text-lg sm:text-xl lg:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto">
+            <p className="text-lg sm:text-xl lg:text-2xl text-text-secondary mb-8 max-w-3xl mx-auto">
               {personalInfo.bio}
             </p>
             
@@ -67,7 +67,7 @@ const Hero: React.FC = () => {
   }
 
   return (
-    <section id="hero" className="min-h-screen flex items-center justify-center bg-black relative overflow-hidden">
+    <section id="hero" className="min-h-screen flex items-center justify-center bg-background relative overflow-hidden">
       <AnimatedCells />
       
       <div className="container relative z-10">
@@ -79,7 +79,7 @@ const Hero: React.FC = () => {
         >
           {/* Main heading */}
           <motion.div 
-            className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 space-y-4"
+            className="heading-hero text-foreground mb-6 space-y-4"
             variants={itemVariants}
           >
             <motion.div 
@@ -89,13 +89,13 @@ const Hero: React.FC = () => {
               Hi, I'm Ren
             </motion.div>
             <motion.div 
-              className="text-2xl sm:text-3xl lg:text-4xl text-gray-400 font-mono block text-center"
+              className="text-2xl sm:text-3xl lg:text-4xl text-text-tertiary font-mono block text-center"
               variants={itemVariants}
             >
                Software Engineer | Full-Stack Developer
             </motion.div>
             <motion.div 
-              className="text-lg sm:text-xl lg:text-2xl text-gray-500 font-mono block text-center"
+              className="text-lg sm:text-xl lg:text-2xl text-text-muted font-mono block text-center"
               variants={itemVariants}
             >
                             Passionate about creating innovative solutions with React, TypeScript, and modern web technologies
@@ -133,7 +133,7 @@ const Hero: React.FC = () => {
           >
             <motion.button
               onClick={() => scrollToSection('#about')}
-              className="text-gray-400 hover:text-white transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 rounded-md p-2"
+              className="text-text-tertiary hover:text-foreground transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded-md p-2"
               aria-label="Scroll to about section"
               whileHover={{ y: -3 }}
               animate={{ y: [0, 5, 0] }}

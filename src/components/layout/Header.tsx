@@ -26,7 +26,7 @@ const Header: React.FC<HeaderProps> = ({ navItems }) => {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-black/10 backdrop-blur-sm border-b border-transparent">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-background/10 backdrop-blur-sm border-b border-transparent">
       <div className="container">
         <div className="flex items-center justify-between h-16 sm:h-20">
           {/* Logo */}
@@ -34,7 +34,7 @@ const Header: React.FC<HeaderProps> = ({ navItems }) => {
             {prefersReducedMotion ? (
               <button
                 onClick={() => scrollToSection('#hero')}
-                className="text-xl sm:text-2xl font-bold text-white font-mono hover:text-gray-300 transition-colors duration-200"
+                className="text-xl sm:text-2xl font-bold text-foreground font-mono hover:text-text-secondary transition-colors duration-200"
                 aria-label="Go to homepage"
                             >
                  <TypewriterText
@@ -48,7 +48,7 @@ const Header: React.FC<HeaderProps> = ({ navItems }) => {
             ) : (
               <motion.button
                 onClick={() => scrollToSection('#hero')}
-                className="text-xl sm:text-2xl font-bold text-white font-mono hover:text-gray-300 transition-colors duration-200"
+                className="text-xl sm:text-2xl font-bold text-foreground font-mono hover:text-text-secondary transition-colors duration-200"
                 aria-label="Go to homepage"
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -77,7 +77,7 @@ const Header: React.FC<HeaderProps> = ({ navItems }) => {
                 <button
                   key={item.href}
                   onClick={() => scrollToSection(item.href)}
-                  className="text-gray-300 hover:text-white font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 rounded-md px-2 py-1"
+                  className="text-text-secondary hover:text-foreground font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded-md px-2 py-1"
                 >
                   {item.label}
                 </button>
@@ -85,7 +85,7 @@ const Header: React.FC<HeaderProps> = ({ navItems }) => {
                 <motion.button
                   key={item.href}
                   onClick={() => scrollToSection(item.href)}
-                  className="text-gray-300 hover:text-white font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 rounded-md px-2 py-1"
+                  className="text-text-secondary hover:text-foreground font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded-md px-2 py-1"
                   initial={{ opacity: 0, y: -20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ 
@@ -109,7 +109,7 @@ const Header: React.FC<HeaderProps> = ({ navItems }) => {
           {prefersReducedMotion ? (
             <button
               onClick={toggleMenu}
-              className="md:hidden p-2 rounded-md text-gray-300 hover:text-white hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 transition-colors duration-200"
+              className="md:hidden p-2 rounded-md text-text-secondary hover:text-foreground hover:bg-surface-2 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 transition-colors duration-200"
               aria-expanded={isMenuOpen}
               aria-controls="mobile-menu"
               aria-label="Toggle navigation menu"
@@ -141,7 +141,7 @@ const Header: React.FC<HeaderProps> = ({ navItems }) => {
           ) : (
             <motion.button
               onClick={toggleMenu}
-              className="md:hidden p-2 rounded-md text-gray-300 hover:text-white hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 transition-colors duration-200 relative"
+              className="md:hidden p-2 rounded-md text-text-secondary hover:text-foreground hover:bg-surface-2 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 transition-colors duration-200 relative"
               aria-expanded={isMenuOpen}
               aria-controls="mobile-menu"
               aria-label="Toggle navigation menu"
@@ -153,7 +153,7 @@ const Header: React.FC<HeaderProps> = ({ navItems }) => {
             >
               {/* Animated background circle */}
               <motion.div
-                className="absolute inset-0 rounded-full bg-gray-800"
+                className="absolute inset-0 rounded-full bg-surface-2"
                 initial={{ scale: 0, opacity: 0 }}
                 animate={{
                   scale: isMenuOpen ? 1 : 0,
@@ -234,7 +234,7 @@ const Header: React.FC<HeaderProps> = ({ navItems }) => {
         isMenuOpen && (
           <nav
             id="mobile-menu"
-            className="md:hidden bg-black/95 backdrop-blur-lg border-t border-gray-800"
+            className="md:hidden bg-background/95 backdrop-blur-lg border-t border-border-subtle"
             role="navigation"
           >
             <div className="container py-4">
@@ -243,7 +243,7 @@ const Header: React.FC<HeaderProps> = ({ navItems }) => {
                   <button
                     key={item.href}
                     onClick={() => scrollToSection(item.href)}
-                    className="text-left text-gray-300 hover:text-white font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 rounded-md px-2 py-2"
+                    className="text-left text-text-secondary hover:text-foreground font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded-md px-2 py-2"
                   >
                     {item.label}
                   </button>
@@ -257,7 +257,7 @@ const Header: React.FC<HeaderProps> = ({ navItems }) => {
           {isMenuOpen && (
             <motion.nav
               id="mobile-menu"
-              className="md:hidden bg-black/95 backdrop-blur-lg border-t border-gray-800"
+              className="md:hidden bg-background/95 backdrop-blur-lg border-t border-border-subtle"
               role="navigation"
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
@@ -280,7 +280,7 @@ const Header: React.FC<HeaderProps> = ({ navItems }) => {
                     <motion.button
                       key={item.href}
                       onClick={() => scrollToSection(item.href)}
-                      className="text-left text-gray-300 hover:text-white font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 rounded-md px-2 py-2 relative overflow-hidden group"
+                      className="text-left text-text-secondary hover:text-foreground font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded-md px-2 py-2 relative overflow-hidden group"
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
                       exit={{ opacity: 0, x: -20 }}
@@ -298,7 +298,7 @@ const Header: React.FC<HeaderProps> = ({ navItems }) => {
                       <span className="relative z-10">{item.label}</span>
                       {/* Animated underline */}
                       <motion.div
-                        className="absolute bottom-0 left-0 h-px bg-gradient-to-r from-blue-400 to-purple-400"
+                        className="absolute bottom-0 left-0 h-px bg-gradient-to-r from-primary to-accent"
                         initial={{ width: 0 }}
                         whileHover={{
                           width: "100%",

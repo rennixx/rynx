@@ -37,7 +37,7 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
       />
       {text && (
         <motion.p 
-          className={`mt-3 text-gray-400 ${textSizeClasses[size]}`}
+          className={`mt-3 text-text-tertiary ${textSizeClasses[size]}`}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}

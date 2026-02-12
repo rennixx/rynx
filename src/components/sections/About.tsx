@@ -29,15 +29,15 @@ const About: React.FC = () => {
 
   if (prefersReducedMotion) {
     return (
-      <section id="about" className="section-padding bg-black">
+      <section id="about" className="section-padding bg-background">
         <div className="container">
           <div className="max-w-6xl mx-auto">
             {/* Section Header */}
             <div className="text-center mb-16">
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4">
+              <h2 className="heading-section text-foreground mb-4">
                 About Me
               </h2>
-              <p className="text-lg text-gray-300 max-w-3xl mx-auto text-balance">
+              <p className="text-lg text-text-secondary max-w-3xl mx-auto text-balance">
                 I'm a dedicated developer with a passion for creating innovative solutions 
                 that make a difference in people's lives.
               </p>
@@ -48,19 +48,19 @@ const About: React.FC = () => {
               <div className="space-y-6">
                 {/* Current Role */}
                 <div className="mb-6">
-                  <h3 className="text-xl font-semibold text-white mb-2">
+                  <h3 className="text-xl font-semibold text-foreground mb-2">
                     {personalInfo.title}
                   </h3>
-                  <p className="text-green-400 text-sm font-mono">
+                  <p className="text-success text-sm font-mono">
                     {currentRole.position} @ {currentRole.company} • {currentRole.location}
                   </p>
                 </div>
 
                 <div className="space-y-4">
-                  <p className="text-gray-300 leading-relaxed">
+                  <p className="text-text-secondary leading-relaxed">
                     {personalInfo.bio}
                   </p>
-                  <p className="text-gray-300 leading-relaxed">
+                  <p className="text-text-secondary leading-relaxed">
                     I believe in writing clean, maintainable code and following best practices. 
                     Whether it's a complex web application or a simple landing page, I approach 
                     every project with attention to detail and a commitment to excellence.
@@ -69,7 +69,7 @@ const About: React.FC = () => {
 
                 {/* Divider Line */}
                 <div className="flex justify-center pt-8">
-                  <div className="w-32 h-px bg-gradient-to-r from-transparent via-gray-400 to-transparent"></div>
+                  <div className="w-32 h-px bg-gradient-to-r from-transparent via-text-tertiary to-transparent"></div>
                 </div>
 
 
@@ -77,8 +77,8 @@ const About: React.FC = () => {
 
               {/* Image placeholder */}
               <div className="order-first lg:order-last">
-                <div className="aspect-square bg-gray-700 rounded-2xl flex items-center justify-center">
-                  <div className="text-center text-gray-400">
+                <div className="aspect-square bg-surface-2 rounded-2xl flex items-center justify-center">
+                  <div className="text-center text-text-tertiary">
                     <svg
                       className="w-16 h-16 mx-auto mb-4"
                       fill="none"
@@ -105,7 +105,7 @@ const About: React.FC = () => {
   }
 
   return (
-    <section id="about" className="section-padding bg-black">
+    <section id="about" className="section-padding bg-background">
       <div className="container">
         <motion.div 
           className="max-w-6xl mx-auto"
@@ -119,10 +119,10 @@ const About: React.FC = () => {
             className="text-center mb-16"
             variants={itemVariants}
           >
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4">
+            <h2 className="heading-section text-foreground mb-4">
               About Me
             </h2>
-            <p className="text-lg text-gray-300 max-w-3xl mx-auto text-balance">
+            <p className="text-lg text-text-secondary max-w-3xl mx-auto text-balance">
               I'm a dedicated developer with a passion for creating innovative solutions 
               that make a difference in people's lives.
             </p>
@@ -136,23 +136,23 @@ const About: React.FC = () => {
             >
               {/* Current Role */}
               <div className="mb-6">
-                <h3 className="text-xl font-semibold text-white mb-2">
+                <h3 className="text-xl font-semibold text-foreground mb-2">
                   {personalInfo.title}
                 </h3>
-                <p className="text-green-400 text-sm font-mono">
+                <p className="text-success text-sm font-mono">
                   {currentRole.position} @ {currentRole.company} • {currentRole.location}
                 </p>
               </div>
 
               <div className="space-y-4">
-                <p className="text-gray-300 leading-relaxed">
+                <p className="text-text-secondary leading-relaxed">
                   {personalInfo.bio}
                 </p>
               </div>
 
                               {/* Divider Line */}
                 <div className="flex justify-center pt-8">
-                  <div className="w-32 h-px bg-gradient-to-r from-transparent via-gray-400 to-transparent"></div>
+                  <div className="w-32 h-px bg-gradient-to-r from-transparent via-text-tertiary to-transparent"></div>
                 </div>
 
 

@@ -70,15 +70,15 @@ const Projects: React.FC = () => {
 
   if (prefersReducedMotion) {
     return (
-      <section id="projects" className="section-padding bg-black">
+      <section id="projects" className="section-padding bg-background">
         <div className="container">
           <div className="max-w-6xl mx-auto">
             {/* Section Header */}
             <div className="text-center mb-16">
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4">
+              <h2 className="heading-section text-foreground mb-4">
                 Featured Projects
               </h2>
-              <p className="text-lg text-gray-300 max-w-3xl mx-auto text-balance">
+              <p className="text-lg text-text-secondary max-w-3xl mx-auto text-balance">
                 Here are some of my recent projects that showcase my skills and passion for development.
               </p>
             </div>
@@ -87,14 +87,14 @@ const Projects: React.FC = () => {
             {isLoading && (
               <div className="text-center py-12">
                 <LoadingSpinner size="lg" />
-                <p className="text-gray-400 mt-4">Loading projects from GitHub...</p>
+                <p className="text-text-tertiary mt-4">Loading projects from GitHub...</p>
               </div>
             )}
 
             {/* Error State */}
             {error && (
               <div className="text-center py-12">
-                <p className="text-red-400">Error loading projects: {error.message}</p>
+                <p className="text-destructive">Error loading projects: {error.message}</p>
               </div>
             )}
 
@@ -124,7 +124,7 @@ const Projects: React.FC = () => {
   }
 
   return (
-    <section id="projects" className="section-padding bg-black">
+    <section id="projects" className="section-padding bg-background">
       <div className="container">
         <motion.div
           className="max-w-6xl mx-auto"
@@ -138,10 +138,10 @@ const Projects: React.FC = () => {
             className="text-center mb-16"
             variants={itemVariants}
           >
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4">
+            <h2 className="heading-section text-foreground mb-4">
               Featured Projects
             </h2>
-            <p className="text-lg text-gray-300 max-w-3xl mx-auto text-balance">
+            <p className="text-lg text-text-secondary max-w-3xl mx-auto text-balance">
               Here are some of my recent projects that showcase my skills and passion for development.
             </p>
           </motion.div>
@@ -153,7 +153,7 @@ const Projects: React.FC = () => {
               variants={itemVariants}
             >
               <LoadingSpinner size="lg" />
-              <p className="text-gray-400 mt-4">Loading projects from GitHub...</p>
+              <p className="text-text-tertiary mt-4">Loading projects from GitHub...</p>
             </motion.div>
           )}
 
@@ -163,7 +163,7 @@ const Projects: React.FC = () => {
               className="text-center py-12"
               variants={itemVariants}
             >
-              <p className="text-red-400">Error loading projects: {error.message}</p>
+              <p className="text-destructive">Error loading projects: {error.message}</p>
             </motion.div>
           )}
 

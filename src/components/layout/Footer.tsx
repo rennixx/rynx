@@ -27,7 +27,7 @@ const Footer: React.FC = () => {
   ];
 
   return (
-    <footer className="bg-black border-t border-gray-800">
+    <footer className="bg-background border-t border-border-subtle">
       <div className="container section-padding">
         <div className="flex flex-col items-center space-y-6">
           {/* Social Links */}
@@ -38,7 +38,7 @@ const Footer: React.FC = () => {
                 href={item.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-400 hover:text-white transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 rounded-md p-1"
+                className="text-text-tertiary hover:text-foreground transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded-md p-1"
                 aria-label={`Visit ${item.name} profile`}
               >
                 {item.icon}
@@ -48,7 +48,7 @@ const Footer: React.FC = () => {
 
           {/* Copyright */}
           <div className="text-center">
-            <p className="text-gray-300 text-sm">
+            <p className="text-text-secondary text-sm">
               © {currentYear} RYNX. All rights reserved.
             </p>
           </div>

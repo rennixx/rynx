@@ -123,7 +123,7 @@ const TypewriterText: React.FC<TypewriterTextProps> = ({
       <motion.span
         animate={{ opacity: showCursor ? 1 : 0 }}
         transition={{ duration: 0.1 }}
-        className="text-gray-600"
+        className="text-text-muted"
       >
         {cursor}
       </motion.span>

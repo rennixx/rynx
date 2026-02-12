@@ -43,7 +43,7 @@ const Skills: React.FC = () => {
         <div
           key={i}
           className={`w-1.5 h-1.5 rounded-full transition-colors duration-300 ${
-            i <= Math.ceil(level / 25) ? 'bg-green-400' : 'bg-gray-600'
+            i <= Math.ceil(level / 25) ? 'bg-success' : 'bg-surface-3'
           }`}
         />
       );
@@ -53,15 +53,15 @@ const Skills: React.FC = () => {
 
   if (prefersReducedMotion) {
     return (
-      <section id="skills" className="section-padding bg-black">
+      <section id="skills" className="section-padding bg-background">
         <div className="container">
           <div className="max-w-6xl mx-auto">
             {/* Section Header */}
             <div className="text-center mb-16">
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4">
+              <h2 className="heading-section text-foreground mb-4">
                 Skills & Technologies
               </h2>
-              <p className="text-lg text-gray-300 max-w-3xl mx-auto text-balance">
+              <p className="text-lg text-text-secondary max-w-3xl mx-auto text-balance">
                 Here are the technologies and tools I work with to bring ideas to life.
               </p>
             </div>
@@ -80,19 +80,19 @@ const Skills: React.FC = () => {
                       <span className={`px-3 py-1 rounded-full text-sm font-medium ${category.color}`}>
                         {category.label}
                       </span>
-                      <div className="h-px bg-gray-700 flex-1"></div>
+                      <div className="h-px bg-border-default flex-1"></div>
                     </div>
                     
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
                       {categorySkills.map((skill) => (
                         <div
                           key={skill.name}
-                          className="group p-4 bg-gray-900 hover:bg-gray-800 rounded-lg transition-all duration-300 text-center border border-gray-700"
+                          className="group p-4 bg-surface-1 hover:bg-surface-2 rounded-lg transition-all duration-300 text-center border border-border-default"
                         >
-                          <div className="font-medium text-white text-sm mb-1">
+                          <div className="font-medium text-foreground text-sm mb-1">
                             {skill.name}
                           </div>
-                          <div className="text-xs text-gray-400">
+                          <div className="text-xs text-text-tertiary">
                             {skill.yearsOfExperience}+ years
                           </div>
                           
@@ -112,7 +112,7 @@ const Skills: React.FC = () => {
 
             {/* Additional Info */}
             <div className="mt-16 text-center">
-              <p className="text-gray-400">
+              <p className="text-text-tertiary">
                 Always learning and exploring new technologies to stay current with industry trends.
               </p>
             </div>
@@ -123,7 +123,7 @@ const Skills: React.FC = () => {
   }
 
   return (
-    <section id="skills" className="section-padding bg-black">
+    <section id="skills" className="section-padding bg-background">
       <div className="container">
         <motion.div 
           className="max-w-6xl mx-auto"
@@ -137,10 +137,10 @@ const Skills: React.FC = () => {
             className="text-center mb-16"
             variants={itemVariants}
           >
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4">
+            <h2 className="heading-section text-foreground mb-4">
               Skills & Technologies
             </h2>
-            <p className="text-lg text-gray-300 max-w-3xl mx-auto text-balance">
+            <p className="text-lg text-text-secondary max-w-3xl mx-auto text-balance">
               Here are the technologies and tools I work with to bring ideas to life.
             </p>
           </motion.div>
@@ -164,14 +164,14 @@ const Skills: React.FC = () => {
                     <span className={`px-3 py-1 rounded-full text-sm font-medium ${category.color}`}>
                       {category.label}
                     </span>
-                    <div className="h-px bg-gray-700 flex-1"></div>
+                    <div className="h-px bg-border-default flex-1"></div>
                   </div>
                   
                   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
                     {categorySkills.map((skill, skillIndex) => (
                       <motion.div
                         key={skill.name}
-                        className="group p-4 bg-gray-900 hover:bg-gray-800 rounded-lg transition-all duration-300 text-center border border-gray-700"
+                        className="group p-4 bg-surface-1 hover:bg-surface-2 rounded-lg transition-all duration-300 text-center border border-border-default"
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ 
@@ -180,10 +180,10 @@ const Skills: React.FC = () => {
                         }}
                         whileHover={{ scale: 1.05 }}
                       >
-                        <div className="font-medium text-white text-sm mb-1">
+                        <div className="font-medium text-foreground text-sm mb-1">
                           {skill.name}
                         </div>
-                        <div className="text-xs text-gray-400">
+                        <div className="text-xs text-text-tertiary">
                           {skill.yearsOfExperience}+ years
                         </div>
                         
@@ -206,7 +206,7 @@ const Skills: React.FC = () => {
             className="mt-16 text-center"
             variants={itemVariants}
           >
-            <p className="text-gray-400">
+            <p className="text-text-tertiary">
               Always learning and exploring new technologies to stay current with industry trends.
             </p>
           </motion.div>
