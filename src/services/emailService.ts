@@ -38,39 +38,3 @@ export const sendContactEmail = async (formData: ContactForm): Promise<void> => 
     throw error;
   }
 };
-
-// Configuration helper for setup
-export const getEmailJSSetupInstructions = () => {
-  return {
-    instructions: [
-      '1. Go to https://www.emailjs.com/ and create a free account',
-      '2. Create an email service (Gmail, Outlook, etc.)',
-      '3. Create an email template with these variables:',
-      '   - {{from_name}} - Sender name',
-      '   - {{from_email}} - Sender email',
-      '   - {{subject}} - Email subject',
-      '   - {{message}} - Email message',
-      '   - {{to_email}} - Your email (vrynyx@gmail.com)',
-      '4. Get your Service ID, Template ID, and Public Key',
-      '5. Update the EMAILJS_CONFIG in src/services/emailService.ts',
-    ],
-    templateExample: `
-Subject: New Contact Form Message: {{subject}}
-
-Hello,
-
-You have received a new message from your portfolio contact form:
-
-Name: {{from_name}}
-Email: {{from_email}}
-Subject: {{subject}}
-
-Message:
-{{message}}
-
----
-This message was sent from your portfolio website.
-Reply directly to: {{from_email}}
-    `,
-  };
-};

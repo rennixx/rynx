@@ -35,16 +35,6 @@ export const useGitHubRepos = ({
   });
 };
 
-export const useGitHubUser = (username?: string) => {
-  return useQuery({
-    queryKey: ['github-user', username],
-    queryFn: () => githubService.getUser(username!),
-    enabled: !!username,
-    staleTime: 10 * 60 * 1000, // 10 minutes
-    gcTime: 30 * 60 * 1000, // 30 minutes
-  });
-};
-
 export const useGitHubRepoStats = (owner: string, repo: string, enabled = true) => {
   return useQuery({
     queryKey: ['github-repo-stats', owner, repo],

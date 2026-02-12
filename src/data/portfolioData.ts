@@ -43,29 +43,6 @@ export interface Experience {
   type: 'full-time' | 'part-time' | 'contract' | 'freelance' | 'internship';
 }
 
-export interface Testimonial {
-  id: string;
-  name: string;
-  position: string;
-  company: string;
-  content: string;
-  rating: number;
-  avatar: string;
-  date: string;
-}
-
-export interface BlogPost {
-  id: string;
-  title: string;
-  excerpt: string;
-  content: string;
-  publishDate: string;
-  tags: string[];
-  readTime: number;
-  featured: boolean;
-  imageUrl?: string;
-}
-
 // Sample data - replace with your actual content
 export const projects: Project[] = [
   {
@@ -174,64 +151,6 @@ export const experiences: Experience[] = [
     technologies: ['React', 'JavaScript', 'Sass', 'Webpack', 'Redux'],
     location: 'San Francisco, CA',
     type: 'full-time'
-  }
-];
-
-export const testimonials: Testimonial[] = [
-  {
-    id: 'testimonial-1',
-    name: 'Sarah Johnson',
-    position: 'Product Manager',
-    company: 'TechCorp',
-    content: 'Working with this developer was exceptional. Their attention to detail and ability to implement complex animations while maintaining performance is outstanding.',
-    rating: 5,
-    avatar: '/images/testimonial-sarah.jpg',
-    date: '2024-01-15'
-  },
-  {
-    id: 'testimonial-2',
-    name: 'Mike Chen',
-    position: 'CTO',
-    company: 'StartupXYZ',
-    content: 'One of the most skilled frontend developers I\'ve worked with. Consistently delivers high-quality code and brings innovative solutions to complex problems.',
-    rating: 5,
-    avatar: '/images/testimonial-mike.jpg',
-    date: '2023-12-10'
-  },
-  {
-    id: 'testimonial-3',
-    name: 'Emily Rodriguez',
-    position: 'Design Lead',
-    company: 'CreativeAgency',
-    content: 'Incredible ability to bring designs to life with smooth animations and interactions. Always goes above and beyond to ensure the final product exceeds expectations.',
-    rating: 5,
-    avatar: '/images/testimonial-emily.jpg',
-    date: '2023-11-22'
-  }
-];
-
-export const blogPosts: BlogPost[] = [
-  {
-    id: 'react-performance-optimization',
-    title: 'Advanced React Performance Optimization Techniques',
-    excerpt: 'Deep dive into React performance optimization strategies including memoization, code splitting, and advanced patterns.',
-    content: '# Advanced React Performance Optimization\n\nIn this article, we\'ll explore...',
-    publishDate: '2024-01-20',
-    tags: ['React', 'Performance', 'JavaScript', 'Web Development'],
-    readTime: 8,
-    featured: true,
-    imageUrl: '/images/blog-react-performance.jpg'
-  },
-  {
-    id: 'animation-best-practices',
-    title: 'Creating Smooth Web Animations: Best Practices',
-    excerpt: 'Learn how to create performant, smooth animations that enhance user experience without compromising performance.',
-    content: '# Creating Smooth Web Animations\n\nAnimations can make or break...',
-    publishDate: '2024-01-10',
-    tags: ['Animation', 'CSS', 'JavaScript', 'UX'],
-    readTime: 6,
-    featured: false,
-    imageUrl: '/images/blog-animations.jpg'
   }
 ];
 

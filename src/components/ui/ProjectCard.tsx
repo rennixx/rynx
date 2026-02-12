@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-// import { useQuery } from '@tanstack/react-query';
 import LoadingSpinner from '../common/LoadingSpinner';
 import { useGitHubRepoStats } from '../../hooks/useGitHubData';
 import type { Project } from '../../data/portfolioData';
