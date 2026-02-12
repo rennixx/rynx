@@ -3,213 +3,107 @@ import { motion } from 'framer-motion';
 import { skills } from '../../data/portfolioData';
 import { useReducedMotion } from '../../hooks/useReducedMotion';
 
+const categories = [
+  { key: 'frontend', label: 'Frontend', accent: 'border-blue-500/40 bg-blue-500/10 text-blue-300' },
+  { key: 'backend', label: 'Backend', accent: 'border-green-500/40 bg-green-500/10 text-green-300' },
+  { key: 'database', label: 'Database', accent: 'border-orange-500/40 bg-orange-500/10 text-orange-300' },
+  { key: 'devops', label: 'DevOps', accent: 'border-purple-500/40 bg-purple-500/10 text-purple-300' },
+  { key: 'design', label: 'Design', accent: 'border-pink-500/40 bg-pink-500/10 text-pink-300' },
+  { key: 'tool', label: 'Tools', accent: 'border-border-default bg-surface-1 text-text-secondary' },
+] as const;
+
 const Skills: React.FC = () => {
   const prefersReducedMotion = useReducedMotion();
 
-  const categories = [
-    { key: 'frontend', label: 'Frontend', color: 'bg-blue-500/20 text-blue-300' },
-    { key: 'backend', label: 'Backend', color: 'bg-green-500/20 text-green-300' },
-    { key: 'database', label: 'Database', color: 'bg-orange-500/20 text-orange-300' },
-    { key: 'devops', label: 'DevOps', color: 'bg-purple-500/20 text-purple-300' },
-    { key: 'design', label: 'Design', color: 'bg-pink-500/20 text-pink-300' },
-    { key: 'tool', label: 'Tools', color: 'bg-gray-500/20 text-gray-300' },
-  ] as const;
-
   const groupedSkills = categories.reduce((acc, category) => {
-    acc[category.key] = skills.filter(skill => skill.category === category.key);
+    acc[category.key] = skills.filter((s) => s.category === category.key);
     return acc;
   }, {} as Record<string, typeof skills>);
 
   const containerVariants = {
     hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.1,
-      },
-    },
+    visible: { opacity: 1, transition: { staggerChildren: 0.1, delayChildren: 0.1 } },
   } as const;
 
   const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0 },
+    hidden: { opacity: 0, y: 24 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.25, 0.1, 0.25, 1] as const } },
   };
 
-  const getSkillLevelDots = (level: number) => {
-    const dots = [];
-    for (let i = 1; i <= 4; i++) {
-      dots.push(
-        <div
-          key={i}
-          className={`w-1.5 h-1.5 rounded-full transition-colors duration-300 ${
-            i <= Math.ceil(level / 25) ? 'bg-success' : 'bg-surface-3'
-          }`}
-        />
-      );
-    }
-    return dots;
-  };
+  /* ── Shared content ── */
+  const header = (
+    <>
+      <h2 className="heading-section text-foreground mb-4">Skills &amp; Technologies</h2>
+      <p className="text-lg text-text-secondary max-w-2xl mx-auto text-balance">
+        The technologies and tools I reach for when building modern web applications.
+      </p>
+    </>
+  );
 
+  const skillGrid = (
+    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {categories.map((cat) => {
+        const items = groupedSkills[cat.key];
+        if (!items?.length) return null;
+
+        return (
+          <div
+            key={cat.key}
+            className="rounded-xl border border-border-subtle bg-surface-1/50 p-5 space-y-3"
+          >
+            {/* Category label */}
+            <span className={`inline-block px-2.5 py-1 rounded-md text-xs font-semibold border ${cat.accent}`}>
+              {cat.label}
+            </span>
+
+            {/* Skills as compact chips */}
+            <div className="flex flex-wrap gap-2">
+              {items.map((skill) => (
+                <span
+                  key={skill.name}
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-sm bg-surface-2 text-foreground border border-border-subtle hover:border-border-default transition-colors"
+                >
+                  {skill.name}
+                  <span className="text-text-muted text-xs">{skill.yearsOfExperience}y</span>
+                </span>
+              ))}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+
+  /* ──────────── Reduced-motion ──────────── */
   if (prefersReducedMotion) {
     return (
       <section id="skills" className="section-padding bg-background">
         <div className="container">
-          <div className="max-w-6xl mx-auto">
-            {/* Section Header */}
-            <div className="text-center mb-16">
-              <h2 className="heading-section text-foreground mb-4">
-                Skills & Technologies
-              </h2>
-              <p className="text-lg text-text-secondary max-w-3xl mx-auto text-balance">
-                Here are the technologies and tools I work with to bring ideas to life.
-              </p>
-            </div>
-
-
-
-            {/* Skills Grid */}
-            <div className="space-y-12">
-              {categories.map((category) => {
-                const categorySkills = groupedSkills[category.key];
-                if (!categorySkills?.length) return null;
-
-                return (
-                  <div key={category.key} className="space-y-6">
-                    <div className="flex items-center gap-3">
-                      <span className={`px-3 py-1 rounded-full text-sm font-medium ${category.color}`}>
-                        {category.label}
-                      </span>
-                      <div className="h-px bg-border-default flex-1"></div>
-                    </div>
-                    
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-                      {categorySkills.map((skill) => (
-                        <div
-                          key={skill.name}
-                          className="group p-4 bg-surface-1 hover:bg-surface-2 rounded-lg transition-all duration-300 text-center border border-border-default"
-                        >
-                          <div className="font-medium text-foreground text-sm mb-1">
-                            {skill.name}
-                          </div>
-                          <div className="text-xs text-text-tertiary">
-                            {skill.yearsOfExperience}+ years
-                          </div>
-                          
-                          {/* Skill level indicator */}
-                          <div className="mt-2 flex justify-center">
-                            <div className="flex space-x-1">
-                              {getSkillLevelDots(skill.level)}
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* Additional Info */}
-            <div className="mt-16 text-center">
-              <p className="text-text-tertiary">
-                Always learning and exploring new technologies to stay current with industry trends.
-              </p>
-            </div>
+          <div className="max-w-5xl mx-auto space-y-12">
+            <div className="text-center">{header}</div>
+            {skillGrid}
           </div>
         </div>
       </section>
     );
   }
 
+  /* ──────────── Animated ──────────── */
   return (
     <section id="skills" className="section-padding bg-background">
       <div className="container">
-        <motion.div 
-          className="max-w-6xl mx-auto"
+        <motion.div
+          className="max-w-5xl mx-auto space-y-12"
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, amount: 0.3 }}
+          viewport={{ once: true, amount: 0.2 }}
         >
-          {/* Section Header */}
-          <motion.div 
-            className="text-center mb-16"
-            variants={itemVariants}
-          >
-            <h2 className="heading-section text-foreground mb-4">
-              Skills & Technologies
-            </h2>
-            <p className="text-lg text-text-secondary max-w-3xl mx-auto text-balance">
-              Here are the technologies and tools I work with to bring ideas to life.
-            </p>
+          <motion.div className="text-center" variants={itemVariants}>
+            {header}
           </motion.div>
 
-
-
-          {/* Skills Grid */}
-          <div className="space-y-12">
-            {categories.map((category, categoryIndex) => {
-              const categorySkills = groupedSkills[category.key];
-              if (!categorySkills?.length) return null;
-
-              return (
-                <motion.div 
-                  key={category.key} 
-                  className="space-y-6"
-                  variants={itemVariants}
-                  transition={{ delay: categoryIndex * 0.1 }}
-                >
-                  <div className="flex items-center gap-3">
-                    <span className={`px-3 py-1 rounded-full text-sm font-medium ${category.color}`}>
-                      {category.label}
-                    </span>
-                    <div className="h-px bg-border-default flex-1"></div>
-                  </div>
-                  
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-                    {categorySkills.map((skill, skillIndex) => (
-                      <motion.div
-                        key={skill.name}
-                        className="group p-4 bg-surface-1 hover:bg-surface-2 rounded-lg transition-all duration-300 text-center border border-border-default"
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ 
-                          delay: categoryIndex * 0.1 + skillIndex * 0.05,
-                          duration: 0.4 
-                        }}
-                        whileHover={{ scale: 1.05 }}
-                      >
-                        <div className="font-medium text-foreground text-sm mb-1">
-                          {skill.name}
-                        </div>
-                        <div className="text-xs text-text-tertiary">
-                          {skill.yearsOfExperience}+ years
-                        </div>
-                        
-                        {/* Skill level indicator */}
-                        <div className="mt-2 flex justify-center">
-                          <div className="flex space-x-1">
-                            {getSkillLevelDots(skill.level)}
-                          </div>
-                        </div>
-                      </motion.div>
-                    ))}
-                  </div>
-                </motion.div>
-              );
-            })}
-          </div>
-
-          {/* Additional Info */}
-          <motion.div 
-            className="mt-16 text-center"
-            variants={itemVariants}
-          >
-            <p className="text-text-tertiary">
-              Always learning and exploring new technologies to stay current with industry trends.
-            </p>
-          </motion.div>
+          <motion.div variants={itemVariants}>{skillGrid}</motion.div>
         </motion.div>
       </div>
     </section>

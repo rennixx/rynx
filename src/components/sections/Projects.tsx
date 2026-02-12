@@ -48,8 +48,8 @@ const Projects: React.FC = () => {
       });
     }
 
-    // Limit to 3 projects total
-    return projects.slice(0, 3);
+    // Limit to 6 projects total
+    return projects.slice(0, 6);
   }, [githubRepos]);
 
   const containerVariants = {
@@ -76,10 +76,10 @@ const Projects: React.FC = () => {
             {/* Section Header */}
             <div className="text-center mb-16">
               <h2 className="heading-section text-foreground mb-4">
-                Featured Projects
+                Selected Work
               </h2>
-              <p className="text-lg text-text-secondary max-w-3xl mx-auto text-balance">
-                Here are some of my recent projects that showcase my skills and passion for development.
+              <p className="text-lg text-text-secondary max-w-2xl mx-auto text-balance">
+                Real projects with real outcomes. Each one taught me something new.
               </p>
             </div>
 
@@ -139,10 +139,10 @@ const Projects: React.FC = () => {
             variants={itemVariants}
           >
             <h2 className="heading-section text-foreground mb-4">
-              Featured Projects
+              Selected Work
             </h2>
-            <p className="text-lg text-text-secondary max-w-3xl mx-auto text-balance">
-              Here are some of my recent projects that showcase my skills and passion for development.
+            <p className="text-lg text-text-secondary max-w-2xl mx-auto text-balance">
+              Real projects with real outcomes. Each one taught me something new.
             </p>
           </motion.div>
 
