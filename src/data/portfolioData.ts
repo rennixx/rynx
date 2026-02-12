@@ -150,10 +150,10 @@ export const experiences: Experience[] = [
     company: 'Freelance',
     position: 'Full-Stack Developer',
     startDate: '2023-06-01',
-    description: 'Full-Stack Developer',
+    description: 'Building end-to-end web applications for clients across diverse industries.',
     achievements: [
-      'Full-Stack Developer',
-      'Full-Stack Developer',
+      'Delivered 10+ production apps using React, TypeScript & Node.js',
+      'Achieved sub-2s LCP and 95+ Lighthouse scores on every project',
     ],
     technologies: ['React', 'TypeScript', 'Next.js', 'GraphQL', 'Jest', 'Cypress'],
     location: 'Remote',
@@ -246,6 +246,6 @@ export const personalInfo = {
   linkedIn: 'https://linkedin.com/in/yourprofile',
   twitter: 'https://twitter.com/yourhandle',
   website: 'https://yourwebsite.com',
-  bio: 'Passionate full-stack developer with expertise in modern web technologies. I love creating beautiful, performant applications that solve real-world problems.',
+  bio: 'Developer based in Erbil with 3+ years of experience shipping React & TypeScript applications. I care about clean code, fast load times, and interfaces that feel effortless to use.',
   
 };

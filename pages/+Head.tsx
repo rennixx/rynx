@@ -1,4 +1,16 @@
 export function Head() {
+  const siteTitle = 'RYNX — Full-Stack Developer | React & TypeScript';
+  const socialLinks = [
+    'https://github.com/rennixx',
+    'https://x.com/vrynyx',
+  ];
+  const address = {
+    '@type': 'PostalAddress' as const,
+    addressLocality: 'Erbil',
+    addressRegion: 'Kurdistan',
+    addressCountry: 'Iraq',
+  };
+
   return (
     <>
       {/* Primary SEO Meta Tags */}
@@ -8,7 +20,7 @@ export function Head() {
       />
       <meta
         name="keywords"
-        content="Full-Stack Developer, React Developer, TypeScript Developer, Node.js Developer, Software Engineer, Web Developer, Frontend Developer, Backend Developer, Mobile App Developer, Erbil Developer, Kurdistan Developer, JavaScript Developer, Web Development, Software Development, Custom Software, Web Applications, Mobile Applications, API Development, Database Design, DevOps, UI/UX Design"
+        content="Full-Stack Developer, React Developer, TypeScript Developer, Node.js Developer, Software Engineer, Web Developer, Frontend Developer, Backend Developer, Erbil Developer, Kurdistan Developer, JavaScript Developer, Web Development, Software Development, Web Applications, API Development"
       />
       <meta name="author" content="RYNX" />
       <meta
@@ -17,13 +29,10 @@ export function Head() {
       />
 
       {/* Open Graph Tags */}
-      <meta
-        property="og:title"
-        content="RYNX - Full-Stack Developer | React & TypeScript Expert"
-      />
+      <meta property="og:title" content={siteTitle} />
       <meta
         property="og:description"
-        content="Expert Full-Stack Developer creating innovative web solutions with React, TypeScript, and modern technologies. Specializing in scalable applications and cutting-edge development."
+        content="Explore projects, skills, and experience from a developer who specialises in React, TypeScript, and Node.js."
       />
       <meta property="og:type" content="website" />
       <meta property="og:url" content="https://rynx.dev" />
@@ -32,22 +41,19 @@ export function Head() {
       <meta property="og:image" content="https://rynx.dev/og-image.png" />
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="630" />
-      <meta property="og:image:alt" content="RYNX — Full-Stack Developer" />
+      <meta property="og:image:alt" content={siteTitle} />
 
       {/* Twitter Card Tags */}
       <meta name="twitter:card" content="summary_large_image" />
-      <meta
-        name="twitter:title"
-        content="RYNX - Full-Stack Developer | React & TypeScript Expert"
-      />
+      <meta name="twitter:title" content={siteTitle} />
       <meta
         name="twitter:description"
-        content="Expert Full-Stack Developer creating innovative web solutions with React, TypeScript, and modern technologies."
+        content="Selected projects and skills from a React & TypeScript developer based in Erbil."
       />
-      <meta name="twitter:site" content="@rynxdev" />
-      <meta name="twitter:creator" content="@rynxdev" />
+      <meta name="twitter:site" content="@vrynyx" />
+      <meta name="twitter:creator" content="@vrynyx" />
       <meta name="twitter:image" content="https://rynx.dev/og-image.png" />
-      <meta name="twitter:image:alt" content="RYNX — Full-Stack Developer" />
+      <meta name="twitter:image:alt" content={siteTitle} />
 
       {/* Preconnect hints */}
       <link rel="preconnect" href="https://api.github.com" />
@@ -69,38 +75,24 @@ export function Head() {
             alternateName: 'Ren',
             jobTitle: 'Full-Stack Developer',
             description:
-              'Passionate Full-Stack Developer specializing in React, TypeScript, Node.js, and modern web technologies. Expert in building scalable web applications and innovative software solutions.',
+              'Full-Stack Developer specialising in React, TypeScript, and Node.js — building fast, accessible web applications.',
             url: 'https://rynx.dev',
             image: 'https://rynx.dev/profile-image.jpg',
-            sameAs: [
-              'https://github.com/rennixx',
-              'https://x.com/vrynyx',
-            ],
+            sameAs: socialLinks,
             knowsAbout: [
-              'React Development',
-              'TypeScript Development',
-              'JavaScript Development',
-              'Node.js Development',
+              'React',
+              'TypeScript',
+              'Node.js',
               'Full-Stack Web Development',
-              'Mobile App Development',
               'API Development',
-              'Database Design',
               'Software Architecture',
-              'UI/UX Design',
-              'DevOps',
               'Web Performance',
-              'Responsive Design',
             ],
             worksFor: {
               '@type': 'Organization',
-              name: 'Freelance Developer',
+              name: 'Freelance',
             },
-            address: {
-              '@type': 'PostalAddress',
-              addressLocality: 'Erbil',
-              addressRegion: 'Kurdistan',
-              addressCountry: 'Iraq',
-            },
+            address,
             hasOccupation: {
               '@type': 'Occupation',
               name: 'Software Developer',
@@ -124,36 +116,18 @@ export function Head() {
             url: 'https://rynx.dev',
             logo: 'https://rynx.dev/logo.png',
             description:
-              'Professional web development and software engineering services specializing in React, TypeScript, and modern web technologies. Serving Erbil, Kurdistan, and clients worldwide.',
-            address: {
-              '@type': 'PostalAddress',
-              addressLocality: 'Erbil',
-              addressRegion: 'Kurdistan',
-              addressCountry: 'Iraq',
-            },
+              'Web development services — React, TypeScript, and Node.js applications for clients worldwide.',
+            address,
             contactPoint: {
               '@type': 'ContactPoint',
               contactType: 'customer service',
               email: 'contact@rynx.dev',
             },
-            sameAs: [
-              'https://github.com/rennixx',
-              'https://x.com/vrynyx',
-            ],
+            sameAs: socialLinks,
             areaServed: [
               { '@type': 'Place', name: 'Erbil, Kurdistan' },
-              { '@type': 'Place', name: 'Iraq' },
               { '@type': 'Place', name: 'Worldwide' },
             ],
-            serviceArea: {
-              '@type': 'GeoCircle',
-              geoMidpoint: {
-                '@type': 'GeoCoordinates',
-                latitude: 36.1901,
-                longitude: 43.993,
-              },
-              geoRadius: '50000',
-            },
             hasOfferCatalog: {
               '@type': 'OfferCatalog',
               name: 'Web Development Services',
@@ -164,25 +138,16 @@ export function Head() {
                     '@type': 'Service',
                     name: 'Full-Stack Web Development',
                     description:
-                      'Complete web applications using React, TypeScript, and modern technologies',
+                      'End-to-end web applications using React, TypeScript, and Node.js',
                   },
                 },
                 {
                   '@type': 'Offer',
                   itemOffered: {
                     '@type': 'Service',
-                    name: 'Mobile App Development',
+                    name: 'API & Backend Development',
                     description:
-                      'Cross-platform mobile applications for iOS and Android',
-                  },
-                },
-                {
-                  '@type': 'Offer',
-                  itemOffered: {
-                    '@type': 'Service',
-                    name: 'API Development',
-                    description:
-                      'RESTful APIs and backend services using Node.js and modern frameworks',
+                      'RESTful APIs and backend services built on Node.js',
                   },
                 },
               ],
