@@ -9,7 +9,7 @@ interface TrailPoint {
   age: number;
 }
 
-const TRAIL_CHARS = ['<', '>', '{', '}', '[', ']', '(', ')', '/', '\\', '|', '-', '_', '+', '='];
+const TRAIL_CHARS = ['<', '>', '{', '}', '/', '|', '·'];
 
 const CursorTrail: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -17,6 +17,7 @@ const CursorTrail: React.FC = () => {
   const animationFrameRef = useRef<number>(0);
   const isVisibleRef = useRef(true);
   const hasPointsRef = useRef(false);
+  const lastSpawnRef = useRef(0);
   const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
@@ -36,22 +37,27 @@ const CursorTrail: React.FC = () => {
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
 
-    // Pause when tab hidden
     const handleVisibility = () => {
       isVisibleRef.current = document.visibilityState === 'visible';
     };
     document.addEventListener('visibilitychange', handleVisibility);
 
     const handleMouseMove = (e: MouseEvent) => {
+      const now = performance.now();
+      // Throttle spawning — one point every 60 ms
+      if (now - lastSpawnRef.current < 60) return;
+      lastSpawnRef.current = now;
+
       trailPointsRef.current.push({
-        x: e.clientX + (Math.random() - 0.5) * 20,
-        y: e.clientY + (Math.random() - 0.5) * 20,
-        opacity: 0.8,
+        x: e.clientX + (Math.random() - 0.5) * 10,
+        y: e.clientY + (Math.random() - 0.5) * 10,
+        opacity: 0.45,
         char: TRAIL_CHARS[Math.floor(Math.random() * TRAIL_CHARS.length)],
         age: 0,
       });
 
-      if (trailPointsRef.current.length > 15) {
+      // Fewer simultaneous points for a lighter feel
+      if (trailPointsRef.current.length > 6) {
         trailPointsRef.current.shift();
       }
       hasPointsRef.current = true;
@@ -60,7 +66,6 @@ const CursorTrail: React.FC = () => {
     const animate = () => {
       animationFrameRef.current = requestAnimationFrame(animate);
 
-      // Skip work when hidden or no points
       if (!isVisibleRef.current) return;
       if (!hasPointsRef.current) return;
 
@@ -68,20 +73,20 @@ const CursorTrail: React.FC = () => {
 
       trailPointsRef.current = trailPointsRef.current.filter(point => {
         point.age += 1;
-        point.opacity = Math.max(0, 0.8 - point.age * 0.05);
+        // Faster decay — disappears in ~5 frames instead of ~16
+        point.opacity = Math.max(0, 0.45 - point.age * 0.09);
 
         if (point.opacity > 0) {
-          ctx.font = '16px "JetBrains Mono Variable", monospace';
+          ctx.font = '11px "JetBrains Mono Variable", monospace';
           ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
 
           const gradient = ctx.createRadialGradient(
             point.x, point.y, 0,
-            point.x, point.y, 20
+            point.x, point.y, 12
           );
-          // Use primary/accent-ish palette (oklch values mapped to sRGB approximations)
           gradient.addColorStop(0, `rgba(160, 140, 255, ${point.opacity})`);
-          gradient.addColorStop(0.5, `rgba(120, 90, 230, ${point.opacity * 0.7})`);
+          gradient.addColorStop(0.6, `rgba(130, 105, 240, ${point.opacity * 0.5})`);
           gradient.addColorStop(1, `rgba(160, 140, 255, 0)`);
 
           ctx.fillStyle = gradient;

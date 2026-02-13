@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import '@fontsource-variable/inter'
 import '@fontsource-variable/jetbrains-mono'
+import '@fontsource-variable/space-grotesk'
 import '@/index.css'
 import QueryProvider from '@/providers/QueryProvider'
 import ErrorBoundary from '@/components/common/ErrorBoundary'

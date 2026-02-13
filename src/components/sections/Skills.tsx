@@ -1,113 +1,178 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { skills } from '../../data/portfolioData';
-import { useReducedMotion } from '../../hooks/useReducedMotion';
+import { motion, useSpring, useTransform, useMotionValue } from 'framer-motion'
+import { skills } from '../../data/portfolioData'
+import { useReducedMotion } from '../../hooks/useReducedMotion'
+import { fadeUp, motionElements } from '../../utils/motion'
 
 const categories = [
-  { key: 'frontend', label: 'Frontend', accent: 'border-blue-500/40 bg-blue-500/10 text-blue-300' },
-  { key: 'backend', label: 'Backend', accent: 'border-green-500/40 bg-green-500/10 text-green-300' },
-  { key: 'database', label: 'Database', accent: 'border-orange-500/40 bg-orange-500/10 text-orange-300' },
-  { key: 'devops', label: 'DevOps', accent: 'border-purple-500/40 bg-purple-500/10 text-purple-300' },
-  { key: 'design', label: 'Design', accent: 'border-pink-500/40 bg-pink-500/10 text-pink-300' },
-  { key: 'tool', label: 'Tools', accent: 'border-border-default bg-surface-1 text-text-secondary' },
-] as const;
+  { key: 'frontend', label: 'Frontend', color: 'oklch(0.65 0.2 250)' },
+  { key: 'backend', label: 'Backend', color: 'oklch(0.65 0.18 155)' },
+  { key: 'database', label: 'Database', color: 'oklch(0.70 0.18 55)' },
+  { key: 'devops', label: 'DevOps', color: 'oklch(0.60 0.22 300)' },
+  { key: 'design', label: 'Design', color: 'oklch(0.65 0.2 340)' },
+  { key: 'tool', label: 'Tools', color: 'oklch(0.55 0 0)' },
+] as const
 
-const Skills: React.FC = () => {
-  const prefersReducedMotion = useReducedMotion();
-
-  const groupedSkills = categories.reduce((acc, category) => {
-    acc[category.key] = skills.filter((s) => s.category === category.key);
-    return acc;
-  }, {} as Record<string, typeof skills>);
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.1, delayChildren: 0.1 } },
-  } as const;
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 24 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.25, 0.1, 0.25, 1] as const } },
-  };
-
-  /* ── Shared content ── */
-  const header = (
-    <>
-      <h2 className="heading-section text-foreground mb-4">Skills &amp; Technologies</h2>
-      <p className="text-lg text-text-secondary max-w-2xl mx-auto text-balance">
-        The technologies and tools I reach for when building modern web applications.
-      </p>
-    </>
-  );
-
-  const skillGrid = (
-    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      {categories.map((cat) => {
-        const items = groupedSkills[cat.key];
-        if (!items?.length) return null;
-
-        return (
+/* ──────────── Skill bar with animated width ──────────── */
+function SkillBar({
+  name,
+  level,
+  years,
+  color,
+  animated,
+}: {
+  name: string
+  level: number
+  years: number
+  color: string
+  animated: boolean
+}) {
+  return (
+    <div className="space-y-1.5">
+      <div className="flex items-center justify-between">
+        <span className="text-sm text-foreground">{name}</span>
+        <span className="text-caption text-text-tertiary">{years}y</span>
+      </div>
+      <div className="h-1.5 rounded-full bg-surface-2 overflow-hidden">
+        {animated ? (
+          <motion.div
+            className="h-full rounded-full"
+            style={{ backgroundColor: color }}
+            initial={{ width: 0 }}
+            whileInView={{ width: `${level}%` }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
+          />
+        ) : (
           <div
-            key={cat.key}
-            className="rounded-xl border border-border-subtle bg-surface-1/50 p-5 space-y-3"
-          >
-            {/* Category label */}
-            <span className={`inline-block px-2.5 py-1 rounded-md text-xs font-semibold border ${cat.accent}`}>
-              {cat.label}
-            </span>
-
-            {/* Skills as compact chips */}
-            <div className="flex flex-wrap gap-2">
-              {items.map((skill) => (
-                <span
-                  key={skill.name}
-                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-sm bg-surface-2 text-foreground border border-border-subtle hover:border-border-default transition-colors"
-                >
-                  {skill.name}
-                  <span className="text-text-muted text-xs">{skill.yearsOfExperience}y</span>
-                </span>
-              ))}
-            </div>
-          </div>
-        );
-      })}
+            className="h-full rounded-full"
+            style={{ backgroundColor: color, width: `${level}%` }}
+          />
+        )}
+      </div>
     </div>
-  );
+  )
+}
 
-  /* ──────────── Reduced-motion ──────────── */
-  if (prefersReducedMotion) {
-    return (
-      <section id="skills" className="section-padding bg-background">
-        <div className="container">
-          <div className="max-w-5xl mx-auto space-y-12">
-            <div className="text-center">{header}</div>
-            {skillGrid}
-          </div>
-        </div>
-      </section>
-    );
+/* ──────────── 3D tilt card ──────────── */
+function TiltCard({
+  children,
+  className = '',
+}: {
+  children: React.ReactNode
+  className?: string
+}) {
+  const prefersReducedMotion = useReducedMotion()
+  const x = useMotionValue(0)
+  const y = useMotionValue(0)
+
+  const rotateX = useSpring(useTransform(y, [-0.5, 0.5], [6, -6]), {
+    stiffness: 200,
+    damping: 20,
+  })
+  const rotateY = useSpring(useTransform(x, [-0.5, 0.5], [-6, 6]), {
+    stiffness: 200,
+    damping: 20,
+  })
+
+  function handleMove(e: React.PointerEvent<HTMLDivElement>) {
+    if (prefersReducedMotion) return
+    const rect = e.currentTarget.getBoundingClientRect()
+    x.set((e.clientX - rect.left) / rect.width - 0.5)
+    y.set((e.clientY - rect.top) / rect.height - 0.5)
   }
 
-  /* ──────────── Animated ──────────── */
-  return (
-    <section id="skills" className="section-padding bg-background">
-      <div className="container">
-        <motion.div
-          className="max-w-5xl mx-auto space-y-12"
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.2 }}
-        >
-          <motion.div className="text-center" variants={itemVariants}>
-            {header}
-          </motion.div>
+  function handleLeave() {
+    x.set(0)
+    y.set(0)
+  }
 
-          <motion.div variants={itemVariants}>{skillGrid}</motion.div>
-        </motion.div>
+  return (
+    <motion.div
+      className={`${className}`}
+      style={
+        prefersReducedMotion
+          ? {}
+          : { rotateX, rotateY, transformPerspective: 800 }
+      }
+      onPointerMove={handleMove}
+      onPointerLeave={handleLeave}
+    >
+      {children}
+    </motion.div>
+  )
+}
+
+/* ──────────── Skills section ──────────── */
+const Skills: React.FC = () => {
+  const prefersReducedMotion = useReducedMotion()
+
+  const grouped = categories.reduce(
+    (acc, cat) => {
+      acc[cat.key] = skills.filter((s) => s.category === cat.key)
+      return acc
+    },
+    {} as Record<string, typeof skills>,
+  )
+
+  const { Wrapper, Item, wrapperProps } = motionElements(!prefersReducedMotion)
+
+  return (
+    <section id="skills" className="section-padding">
+      <div className="container">
+        <Wrapper className="max-w-5xl mx-auto" {...wrapperProps}>
+          {/* Header */}
+          <Item {...(prefersReducedMotion ? {} : { variants: fadeUp })}>
+            <div className="mb-12">
+              <p className="text-overline text-primary mb-3">Expertise</p>
+              <h2 className="text-heading-1 text-foreground">Skills & Technologies</h2>
+            </div>
+          </Item>
+
+          {/* Bento grid of skill categories */}
+          <div className="grid gap-4 md:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+            {categories.map((cat) => {
+              const items = grouped[cat.key]
+              if (!items?.length) return null
+
+              return (
+                <Item
+                  key={cat.key}
+                  {...(prefersReducedMotion ? {} : { variants: fadeUp })}
+                >
+                  <TiltCard className="glass rounded-2xl p-5 h-full">
+                    {/* Category label */}
+                    <div className="flex items-center gap-2 mb-4">
+                      <span
+                        className="w-2 h-2 rounded-full"
+                        style={{ backgroundColor: cat.color }}
+                      />
+                      <span className="text-caption font-semibold uppercase tracking-wider text-text-secondary">
+                        {cat.label}
+                      </span>
+                    </div>
+
+                    {/* Skill bars */}
+                    <div className="space-y-3">
+                      {items.map((skill) => (
+                        <SkillBar
+                          key={skill.name}
+                          name={skill.name}
+                          level={skill.level}
+                          years={skill.yearsOfExperience}
+                          color={cat.color}
+                          animated={!prefersReducedMotion}
+                        />
+                      ))}
+                    </div>
+                  </TiltCard>
+                </Item>
+              )
+            })}
+          </div>
+        </Wrapper>
       </div>
     </section>
-  );
-};
+  )
+}
 
-export default Skills;
+export default Skills

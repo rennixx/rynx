@@ -162,6 +162,7 @@ export const personalInfo = {
   phone: '+964 7704457696',
   location: 'Erbil, Kurdistan',
   githubUsername: 'rennixx',
+  githubUrl: 'https://github.com/rennixx',
   linkedIn: 'https://linkedin.com/in/yourprofile',
   twitter: 'https://twitter.com/yourhandle',
   website: 'https://yourwebsite.com',

@@ -1,52 +1,54 @@
-import { personalInfo } from '../../data/portfolioData';
-import { GitHubIcon, XIcon } from '../icons';
+import { personalInfo } from '../../data/portfolioData'
+import { GitHubIcon, XIcon } from '../icons'
 
 const Footer: React.FC = () => {
-  const currentYear = new Date().getFullYear();
+  const year = new Date().getFullYear()
 
-  const socialLinks = [
+  const links = [
     {
       name: 'GitHub',
-      href: `https://github.com/${personalInfo.githubUsername}`,
-      icon: <GitHubIcon className="h-5 w-5" />,
+      href: personalInfo.githubUrl,
+      icon: <GitHubIcon className="h-4 w-4" />,
     },
     {
       name: 'X',
       href: 'https://x.com/vrynyx',
-      icon: <XIcon className="h-5 w-5" />,
+      icon: <XIcon className="h-4 w-4" />,
     },
-  ];
+  ]
 
   return (
-    <footer className="bg-background border-t border-border-subtle" aria-label="Site footer">
-      <div className="container section-padding">
-        <div className="flex flex-col items-center space-y-6">
-          {/* Social Links */}
-          <div className="flex space-x-6">
-            {socialLinks.map((item) => (
-              <a
-                key={item.name}
-                href={item.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-text-tertiary hover:text-foreground transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded-md p-1"
-                aria-label={`Visit ${item.name} profile`}
-              >
-                {item.icon}
-              </a>
-            ))}
-          </div>
+    <footer
+      className="border-t border-border-subtle py-8"
+      aria-label="Site footer"
+    >
+      <div className="container flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-text-tertiary">
+        {/* Copyright */}
+        <p>© {year} RYNX</p>
 
-          {/* Copyright */}
-          <div className="text-center">
-            <p className="text-text-secondary text-sm">
-              © {currentYear} RYNX. All rights reserved.
-            </p>
-          </div>
+        {/* Built with */}
+        <p className="text-caption">
+          Built with React & TypeScript
+        </p>
+
+        {/* Social links */}
+        <div className="flex items-center gap-4">
+          {links.map((link) => (
+            <a
+              key={link.name}
+              href={link.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-text-tertiary hover:text-foreground transition-colors p-1 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              aria-label={`${link.name} profile`}
+            >
+              {link.icon}
+            </a>
+          ))}
         </div>
       </div>
     </footer>
-  );
-};
+  )
+}
 
-export default Footer;
+export default Footer

@@ -1,357 +1,206 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import TypewriterText from '../effects/TypewriterText';
-import type { NavItem } from '../../types';
-import { useReducedMotion } from '../../hooks/useReducedMotion';
-
+import { useState, useEffect, useCallback, useRef } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import type { NavItem } from '../../types'
+import { useReducedMotion } from '../../hooks/useReducedMotion'
 
 interface HeaderProps {
-  navItems: NavItem[];
+  navItems: NavItem[]
 }
 
 const Header: React.FC<HeaderProps> = ({ navItems }) => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-  const prefersReducedMotion = useReducedMotion();
-  const menuToggleRef = useRef<HTMLButtonElement>(null);
-
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
+  const [menuOpen, setMenuOpen] = useState(false)
+  const [visible, setVisible] = useState(true)
+  const [scrolled, setScrolled] = useState(false)
+  const [activeSection, setActiveSection] = useState('')
+  const prefersReducedMotion = useReducedMotion()
+  const toggleRef = useRef<HTMLButtonElement>(null)
+  const lastScrollY = useRef(0)
 
   const closeMenu = useCallback(() => {
-    setIsMenuOpen(false);
-    // Return focus to the toggle button when closing
-    menuToggleRef.current?.focus();
-  }, []);
+    setMenuOpen(false)
+    toggleRef.current?.focus()
+  }, [])
 
-  const scrollToSection = (href: string) => {
-    const element = document.querySelector(href);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-      closeMenu();
+  /* ── Escape to close ── */
+  useEffect(() => {
+    if (!menuOpen) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') closeMenu()
     }
-  };
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [menuOpen, closeMenu])
 
-  // Close mobile menu on Escape key
+  /* ── Hide on scroll-down, show on scroll-up ── */
   useEffect(() => {
-    if (!isMenuOpen) return;
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') closeMenu();
-    };
-    document.addEventListener('keydown', onKeyDown);
-    return () => document.removeEventListener('keydown', onKeyDown);
-  }, [isMenuOpen, closeMenu]);
+    const onScroll = () => {
+      const y = window.scrollY
+      setScrolled(y > 50)
+      setVisible(y < 50 || y < lastScrollY.current)
+      lastScrollY.current = y
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
 
-  // Track scroll position for header background
+  /* ── Active section detection via IntersectionObserver ── */
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 50);
-    onScroll(); // set initial
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
+    const ids = navItems.map((n) => n.href.replace('#', ''))
+    const observers: IntersectionObserver[] = []
+
+    for (const id of ids) {
+      const el = document.getElementById(id)
+      if (!el) continue
+      const obs = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) setActiveSection(id)
+        },
+        { rootMargin: '-40% 0px -55% 0px' },
+      )
+      obs.observe(el)
+      observers.push(obs)
+    }
+    return () => observers.forEach((o) => o.disconnect())
+  }, [navItems])
+
+  const navTranslateY = visible ? 0 : -100
 
   return (
-    <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-[background-color,border-color,backdrop-filter] duration-300 ${
-        scrolled
-          ? 'bg-background/80 backdrop-blur-md border-b border-border-subtle'
-          : 'bg-background/10 backdrop-blur-sm border-b border-transparent'
-      }`}
-    >
-      <div className="container">
-        <div className="flex items-center justify-between h-16 sm:h-20">
+    <header className="fixed top-0 left-0 right-0 z-50 pointer-events-none">
+      <div className="container flex justify-center pt-4">
+        {/* ── Floating pill ── */}
+        <motion.nav
+          className={`
+            pointer-events-auto inline-flex items-center gap-1
+            rounded-full px-2 py-1.5
+            border transition-all duration-300
+            ${
+              scrolled
+                ? 'bg-background/70 backdrop-blur-xl border-[var(--glass-border)] shadow-lg shadow-black/20'
+                : 'bg-background/30 backdrop-blur-sm border-transparent'
+            }
+          `}
+          role="navigation"
+          aria-label="Main navigation"
+          initial={prefersReducedMotion ? false : { opacity: 0, y: -20 }}
+          animate={
+            prefersReducedMotion
+              ? { y: navTranslateY }
+              : { opacity: 1, y: navTranslateY }
+          }
+          transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
+        >
           {/* Logo */}
-          <div className="flex-shrink-0">
-            {prefersReducedMotion ? (
-              <button
-                onClick={() => scrollToSection('#hero')}
-                className="text-xl sm:text-2xl font-bold text-foreground font-mono hover:text-text-secondary transition-colors duration-200"
-                aria-label="Go to homepage"
-                            >
-                 <TypewriterText
-                   texts={[">RYNX"]}
-                   speed={150}
-                   className="inline-block"
-                   cursor="_"
-                   loop={false}
-                 />
-              </button>
-            ) : (
-              <motion.button
-                onClick={() => scrollToSection('#hero')}
-                className="text-xl sm:text-2xl font-bold text-foreground font-mono hover:text-text-secondary transition-colors duration-200"
-                aria-label="Go to homepage"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6, delay: 0.1 }}
-                whileHover={{ 
-                  scale: 1.05,
-                  transition: { duration: 0.2 }
-                }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <TypewriterText
-                  texts={[">RYNX"]}
-                  speed={150}
-                  className="inline-block"
-                  cursor="_"
-                  loop={false}
-                />
-              </motion.button>
-            )}
-          </div>
-
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8" role="navigation" aria-label="Main navigation">
-            {navItems.map((item, index) => (
-              prefersReducedMotion ? (
-                <button
-                  key={item.href}
-                  onClick={() => scrollToSection(item.href)}
-                  className="text-text-secondary hover:text-foreground font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded-md px-2 py-1"
-                >
-                  {item.label}
-                </button>
-              ) : (
-                <motion.button
-                  key={item.href}
-                  onClick={() => scrollToSection(item.href)}
-                  className="text-text-secondary hover:text-foreground font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded-md px-2 py-1"
-                  initial={{ opacity: 0, y: -20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ 
-                    duration: 0.6, 
-                    delay: 0.3 + index * 0.1,
-                    ease: [0.25, 0.1, 0.25, 1]
-                  }}
-                  whileHover={{ 
-                    y: -2,
-                    transition: { duration: 0.2 }
-                  }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  {item.label}
-                </motion.button>
-              )
-            ))}
-          </nav>
-
-          {/* Mobile menu button */}
-          {prefersReducedMotion ? (
-            <button
-              ref={menuToggleRef}
-              onClick={toggleMenu}
-              className="md:hidden p-2 rounded-md text-text-secondary hover:text-foreground hover:bg-surface-2 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 transition-colors duration-200"
-              aria-expanded={isMenuOpen}
-              aria-controls="mobile-menu"
-              aria-label="Toggle navigation menu"
-            >
-              <svg
-                className="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                aria-hidden="true"
-              >
-                {isMenuOpen ? (
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                ) : (
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 6h16M4 12h16M4 18h16"
-                  />
-                )}
-              </svg>
-            </button>
-          ) : (
-            <motion.button
-              ref={menuToggleRef}
-              onClick={toggleMenu}
-              className="md:hidden p-2 rounded-md text-text-secondary hover:text-foreground hover:bg-surface-2 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 transition-colors duration-200 relative"
-              aria-expanded={isMenuOpen}
-              aria-controls="mobile-menu"
-              aria-label="Toggle navigation menu"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              {/* Animated background circle */}
-              <motion.div
-                className="absolute inset-0 rounded-full bg-surface-2"
-                initial={{ scale: 0, opacity: 0 }}
-                animate={{
-                  scale: isMenuOpen ? 1 : 0,
-                  opacity: isMenuOpen ? 0.5 : 0
-                }}
-                transition={{
-                  duration: 0.2,
-                  ease: "easeInOut"
-                }}
-              />
-
-              {/* Menu icon lines with animation */}
-              <svg
-                className="h-6 w-6 relative z-10"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                aria-hidden="true"
-              >
-                {isMenuOpen ? (
-                  // Close icon (X)
-                  <g>
-                    <motion.path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M6 18L18 6"
-                      initial={{ pathLength: 0 }}
-                      animate={{ pathLength: 1 }}
-                      exit={{ pathLength: 0 }}
-                      transition={{ duration: 0.2, ease: "easeInOut" }}
-                    />
-                    <motion.path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M6 6l12 12"
-                      initial={{ pathLength: 0 }}
-                      animate={{ pathLength: 1 }}
-                      exit={{ pathLength: 0 }}
-                      transition={{ duration: 0.2, delay: 0.1, ease: "easeInOut" }}
-                    />
-                  </g>
-                ) : (
-                  // Hamburger icon
-                  <g>
-                    {[
-                      { d: "M4 6h16", delay: 0 },
-                      { d: "M4 12h16", delay: 0.1 },
-                      { d: "M4 18h16", delay: 0.2 }
-                    ].map((line, index) => (
-                      <motion.path
-                        key={index}
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d={line.d}
-                        initial={{ pathLength: 0, opacity: 0 }}
-                        animate={{ pathLength: 1, opacity: 1 }}
-                        exit={{ pathLength: 0, opacity: 0 }}
-                        transition={{
-                          duration: 0.2,
-                          delay: line.delay,
-                          ease: "easeInOut"
-                        }}
-                      />
-                    ))}
-                  </g>
-                )}
-              </svg>
-            </motion.button>
-          )}
-        </div>
-      </div>
-
-      {/* Mobile Navigation */}
-      {prefersReducedMotion ? (
-        isMenuOpen && (
-          <nav
-            id="mobile-menu"
-            className="md:hidden bg-background/95 backdrop-blur-lg border-t border-border-subtle"
-            role="navigation"
-            aria-label="Mobile navigation"
+          <a
+            href="#hero"
+            className="px-3 py-1.5 text-sm font-bold font-[var(--font-display)] text-foreground tracking-tight hover:text-primary transition-colors"
+            aria-label="Go to homepage"
           >
-            <div className="container py-4">
-              <div className="flex flex-col space-y-4">
-                {navItems.map((item) => (
-                  <button
-                    key={item.href}
-                    onClick={() => scrollToSection(item.href)}
-                    className="text-left text-text-secondary hover:text-foreground font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded-md px-2 py-2"
+            RYNX
+          </a>
+
+          {/* Divider */}
+          <div className="w-px h-4 bg-border-subtle hidden sm:block" />
+
+          {/* Desktop nav links */}
+          <div className="hidden sm:flex items-center gap-0.5">
+            {navItems
+              .filter((n) => n.label !== 'Home')
+              .map((item) => {
+                const sectionId = item.href.replace('#', '')
+                const isActive = activeSection === sectionId
+                return (
+                  <a
+                    key={item.label}
+                    href={item.href}
+                    className={`relative px-3 py-1.5 text-sm rounded-full transition-colors duration-200 ${
+                      isActive
+                        ? 'text-foreground'
+                        : 'text-text-secondary hover:text-foreground'
+                    }`}
                   >
                     {item.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </nav>
-        )
-      ) : (
-        <AnimatePresence>
-          {isMenuOpen && (
-            <motion.nav
-              id="mobile-menu"
-              className="md:hidden bg-background/95 backdrop-blur-lg border-t border-border-subtle"
-              role="navigation"
-              aria-label="Mobile navigation"
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{
-                duration: 0.3,
-                ease: "easeInOut",
-                height: { type: "spring", stiffness: 300, damping: 30 }
-              }}
-            >
-              <motion.div
-                className="container py-4"
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.2, delay: 0.1 }}
-              >
-                <div className="flex flex-col space-y-4">
-                  {navItems.map((item, index) => (
-                    <motion.button
-                      key={item.href}
-                      onClick={() => scrollToSection(item.href)}
-                      className="text-left text-text-secondary hover:text-foreground font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded-md px-2 py-2 relative overflow-hidden group"
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: -20 }}
-                      transition={{
-                        duration: 0.3,
-                        delay: 0.1 + index * 0.05,
-                        ease: "easeOut"
-                      }}
-                      whileHover={{
-                        x: 5,
-                        transition: { duration: 0.2 }
-                      }}
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      <span className="relative z-10">{item.label}</span>
-                      {/* Animated underline */}
-                      <motion.div
-                        className="absolute bottom-0 left-0 h-px bg-gradient-to-r from-primary to-accent"
-                        initial={{ width: 0 }}
-                        whileHover={{
-                          width: "100%",
-                          transition: { duration: 0.3, ease: "easeOut" }
+                    {/* Active dot */}
+                    {isActive && (
+                      <motion.span
+                        className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-primary"
+                        layoutId="nav-dot"
+                        transition={{
+                          type: 'spring',
+                          stiffness: 300,
+                          damping: 30,
                         }}
-                        style={{ width: 0 }}
                       />
-                    </motion.button>
-                  ))}
-                </div>
-              </motion.div>
-            </motion.nav>
-          )}
-        </AnimatePresence>
-      )}
-    </header>
-  );
-};
+                    )}
+                  </a>
+                )
+              })}
+          </div>
 
-export default Header;
+          {/* Divider */}
+          <div className="w-px h-4 bg-border-subtle hidden sm:block" />
+
+          {/* Contact CTA */}
+          <a
+            href="#contact"
+            className="hidden sm:inline-flex px-4 py-1.5 text-xs font-medium rounded-full
+              bg-primary text-primary-foreground hover:bg-primary-hover transition-colors"
+          >
+            Contact
+          </a>
+
+          {/* Mobile hamburger */}
+          <button
+            ref={toggleRef}
+            onClick={() => setMenuOpen(!menuOpen)}
+            className="sm:hidden p-2 rounded-full text-text-secondary hover:text-foreground transition-colors"
+            aria-expanded={menuOpen}
+            aria-controls="mobile-menu"
+            aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              {menuOpen ? (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              ) : (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8h16M4 16h16" />
+              )}
+            </svg>
+          </button>
+        </motion.nav>
+      </div>
+
+      {/* ── Mobile menu ── */}
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            id="mobile-menu"
+            className="pointer-events-auto sm:hidden fixed inset-x-0 top-16 mx-4"
+            initial={{ opacity: 0, y: -8, scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -8, scale: 0.96 }}
+            transition={{ duration: 0.2 }}
+          >
+            <div className="rounded-2xl bg-background/90 backdrop-blur-xl border border-[var(--glass-border)] shadow-xl shadow-black/30 p-4 space-y-1">
+              {navItems.map((item) => (
+                <a
+                  key={item.label}
+                  href={item.href}
+                  onClick={() => closeMenu()}
+                  className={`block px-4 py-2.5 rounded-xl text-sm transition-colors ${
+                    activeSection === item.href.replace('#', '')
+                      ? 'bg-primary/10 text-primary font-medium'
+                      : 'text-text-secondary hover:bg-surface-1 hover:text-foreground'
+                  }`}
+                >
+                  {item.label}
+                </a>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </header>
+  )
+}
+
+export default Header

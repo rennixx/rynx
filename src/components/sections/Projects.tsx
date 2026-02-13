@@ -1,201 +1,135 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import AnimatedButton from '../ui/AnimatedButton';
-import ProjectCard from '../ui/ProjectCard';
-import LoadingSpinner from '../common/LoadingSpinner';
-import { personalInfo, projects as sampleProjects } from '../../data/portfolioData';
-import { useGitHubRepos } from '../../hooks/useGitHubData';
-import { useReducedMotion } from '../../hooks/useReducedMotion';
+import { useMemo } from 'react'
+import ProjectCard from '../ui/ProjectCard'
+import LoadingSpinner from '../common/LoadingSpinner'
+import { personalInfo, projects as sampleProjects } from '../../data/portfolioData'
+import { useGitHubRepos } from '../../hooks/useGitHubData'
+import { useReducedMotion } from '../../hooks/useReducedMotion'
+import { GitHubIcon } from '../icons'
+import { fadeUp, motionElements } from '../../utils/motion'
+
+function GitHubLink({ className = '' }: { className?: string }) {
+  return (
+    <a
+      href={personalInfo.githubUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={`items-center gap-2 text-sm text-text-secondary hover:text-foreground transition-colors inline-flex ${className}`}
+    >
+      <GitHubIcon />
+      View all on GitHub
+    </a>
+  )
+}
 
 const Projects: React.FC = () => {
-  const prefersReducedMotion = useReducedMotion();
+  const prefersReducedMotion = useReducedMotion()
 
-  // Fetch GitHub repos for the user
   const { data: githubRepos, isLoading, error } = useGitHubRepos({
     username: personalInfo.githubUsername,
-    enabled: !!personalInfo.githubUsername
-  });
+    enabled: !!personalInfo.githubUsername,
+  })
 
-  // Combine sample projects with GitHub repos
-  const displayedProjects = React.useMemo(() => {
-    const projects = [...sampleProjects];
+  const displayedProjects = useMemo(() => {
+    const result = [...sampleProjects]
 
-    // Add GitHub repos as projects
     if (githubRepos) {
-      githubRepos.forEach((repo) => {
-        //Skip if it's already in sample projects or if it's a fork
-        if (sampleProjects.some(p => p.githubUrl?.includes(repo.full_name)) || repo.fork) {
-          return;
-        }
+      for (const repo of githubRepos) {
+        if (repo.fork) continue
+        if (sampleProjects.some((p) => p.githubUrl?.includes(repo.full_name))) continue
 
-        const repoProject = {
+        result.push({
           id: `github-${repo.id}`,
-          title: repo.name.replace(/-/g, ' ').replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
+          title: repo.name
+            .replace(/-/g, ' ')
+            .replace(/_/g, ' ')
+            .replace(/\b\w/g, (l: string) => l.toUpperCase()),
           description: repo.description || `A ${repo.language || 'software'} project`,
-          longDescription: repo.description || `A ${repo.language || 'software'} project with ${repo.stargazers_count} stars and ${repo.forks_count} forks.`,
-          technologies: repo.language ? [repo.language, 'JavaScript', 'Git'] : ['JavaScript', 'Git'],
+          longDescription: repo.description || '',
+          technologies: repo.language ? [repo.language, 'Git'] : ['Git'],
           githubUrl: repo.html_url,
           liveUrl: repo.homepage || undefined,
           imageUrl: `https://opengraph.githubassets.com/1/${repo.full_name}`,
-          featured: repo.stargazers_count > 0,
+          featured: false,
           category: 'web' as const,
-          status: (repo.archived ? 'completed' as const : 'in-progress' as const),
+          status: repo.archived ? 'completed' as const : 'in-progress' as const,
           startDate: repo.created_at,
-          endDate: repo.archived ? repo.updated_at : undefined
-        };
-
-        projects.push(repoProject);
-      });
+          endDate: repo.archived ? repo.updated_at : undefined,
+        })
+      }
     }
 
-    // Limit to 6 projects total
-    return projects.slice(0, 6);
-  }, [githubRepos]);
+    return result.slice(0, 6)
+  }, [githubRepos])
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.1,
-      },
-    },
-  };
+  const featured = displayedProjects.filter((p) => p.featured)
+  const rest = displayedProjects.filter((p) => !p.featured)
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0 },
-  };
-
-  if (prefersReducedMotion) {
-    return (
-      <section id="projects" className="section-padding bg-background">
-        <div className="container">
-          <div className="max-w-6xl mx-auto">
-            {/* Section Header */}
-            <div className="text-center mb-16">
-              <h2 className="heading-section text-foreground mb-4">
-                Selected Work
-              </h2>
-              <p className="text-lg text-text-secondary max-w-2xl mx-auto text-balance">
-                Real projects with real outcomes. Each one taught me something new.
-              </p>
-            </div>
-
-            {/* Loading State */}
-            {isLoading && (
-              <div className="text-center py-12">
-                <LoadingSpinner size="lg" />
-                <p className="text-text-tertiary mt-4">Loading projects from GitHub...</p>
-              </div>
-            )}
-
-            {/* Error State */}
-            {error && (
-              <div className="text-center py-12">
-                <p className="text-destructive">Error loading projects: {error.message}</p>
-              </div>
-            )}
-
-            {/* Projects Grid */}
-            {!isLoading && !error && displayedProjects.length > 0 && (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-                {displayedProjects.map((project, index) => (
-                  <ProjectCard key={project.id} project={project} index={index} />
-                ))}
-              </div>
-            )}
-
-            {/* GitHub Button */}
-            <div className="text-center">
-              <AnimatedButton
-                effect="magnetic"
-                size="lg"
-                onClick={() => window.open(`https://github.com/${personalInfo.githubUsername}`, '_blank')}
-              >
-                View All on GitHub
-              </AnimatedButton>
-            </div>
-          </div>
-        </div>
-      </section>
-    );
-  }
+  const { Wrapper, Item, wrapperProps } = motionElements(!prefersReducedMotion)
 
   return (
-    <section id="projects" className="section-padding bg-background">
+    <section id="projects" className="section-padding">
       <div className="container">
-        <motion.div
-          className="max-w-6xl mx-auto"
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.3 }}
-        >
-          {/* Section Header */}
-          <motion.div
-            className="text-center mb-16"
-            variants={itemVariants}
-          >
-            <h2 className="heading-section text-foreground mb-4">
-              Selected Work
-            </h2>
-            <p className="text-lg text-text-secondary max-w-2xl mx-auto text-balance">
-              Real projects with real outcomes. Each one taught me something new.
-            </p>
-          </motion.div>
+        <Wrapper className="max-w-6xl mx-auto" {...wrapperProps}>
+          {/* Header */}
+          <Item {...(prefersReducedMotion ? {} : { variants: fadeUp })}>
+            <div className="flex items-end justify-between mb-12">
+              <div>
+                <p className="text-overline text-primary mb-3">Portfolio</p>
+                <h2 className="text-heading-1 text-foreground">Selected Work</h2>
+              </div>
+              <GitHubLink className="hidden sm:inline-flex" />
+            </div>
+          </Item>
 
-          {/* Loading State */}
+          {/* Loading */}
           {isLoading && (
-            <motion.div
-              className="text-center py-12"
-              variants={itemVariants}
-            >
+            <div className="text-center py-16">
               <LoadingSpinner size="lg" />
-              <p className="text-text-tertiary mt-4">Loading projects from GitHub...</p>
-            </motion.div>
+              <p className="text-text-tertiary mt-4 text-sm">Fetching projects…</p>
+            </div>
           )}
 
-          {/* Error State */}
+          {/* Error */}
           {error && (
-            <motion.div
-              className="text-center py-12"
-              variants={itemVariants}
-            >
-              <p className="text-destructive">Error loading projects: {error.message}</p>
-            </motion.div>
+            <div className="text-center py-16">
+              <p className="text-destructive text-sm">Could not load projects.</p>
+            </div>
           )}
 
-          {/* Projects Grid */}
+          {/* Bento Grid */}
           {!isLoading && !error && displayedProjects.length > 0 && (
-            <motion.div
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12"
-              variants={itemVariants}
-            >
-              {displayedProjects.map((project, index) => (
-                <ProjectCard key={project.id} project={project} index={index} />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+              {/* Featured cards (span 2 cols) */}
+              {featured.map((project) => (
+                <Item
+                  key={project.id}
+                  className="md:col-span-2"
+                  {...(prefersReducedMotion ? {} : { variants: fadeUp })}
+                >
+                  <ProjectCard project={project} featured />
+                </Item>
               ))}
-            </motion.div>
+
+              {/* Standard cards */}
+              {rest.map((project) => (
+                <Item
+                  key={project.id}
+                  {...(prefersReducedMotion ? {} : { variants: fadeUp })}
+                >
+                  <ProjectCard project={project} />
+                </Item>
+              ))}
+            </div>
           )}
 
-          {/* GitHub Button */}
-          <motion.div
-            className="text-center"
-            variants={itemVariants}
-          >
-            <AnimatedButton
-              effect="magnetic"
-              size="lg"
-              onClick={() => window.open(`https://github.com/${personalInfo.githubUsername}`, '_blank')}
-            >
-              View All on GitHub
-            </AnimatedButton>
-          </motion.div>
-        </motion.div>
+          {/* Mobile GitHub link */}
+          <div className="mt-8 text-center sm:hidden">
+            <GitHubLink />
+          </div>
+        </Wrapper>
       </div>
     </section>
-  );
-};
+  )
+}
 
-export default Projects;
+export default Projects
