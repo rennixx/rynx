@@ -1,5 +1,5 @@
 import { motion, useReducedMotion as fmReducedMotion } from 'framer-motion'
-import AnimatedCells from '../effects/AnimatedCells'
+import AnimatedCells from '../effects/EventHorizon'
 import { personalInfo } from '../../data/portfolioData'
 import { GitHubIcon, MailIcon, LocationIcon } from '../icons'
 import { fadeUp, motionElements } from '../../utils/motion'
