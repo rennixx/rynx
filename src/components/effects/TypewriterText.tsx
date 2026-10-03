@@ -79,16 +79,16 @@ const TypewriterText: React.FC<TypewriterTextProps> = ({
 
     return () => clearTimeout(timeout);
   }, [
-    currentText, 
-    currentTextIndex, 
-    isDeleting, 
-    texts, 
-    speed, 
-    deleteSpeed, 
-    delayBetween, 
-    loop,
-    prefersReducedMotion
-  ]);
+      currentText, 
+      currentTextIndex, 
+      isDeleting, 
+      texts, 
+      speed, 
+      deleteSpeed, 
+      delayBetween, 
+      loop,
+      prefersReducedMotion
+    ]);
 
   // Cursor blinking effect
   useEffect(() => {

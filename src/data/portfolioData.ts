@@ -128,7 +128,7 @@ export const skills: Skill[] = [
   { name: 'Node.js', level: 82, category: 'backend', yearsOfExperience: 2, color: '#339933' },
   { name: 'Express.js', level: 78, category: 'backend', yearsOfExperience: 2, color: '#000000' },
   { name: 'Python', level: 70, category: 'backend', yearsOfExperience: 1, color: '#3776AB' },
-  { name: 'REST APIs', level: 85, category: 'backend', yearsOfExperience: 2, color: '#FF6B6B' },
+  { name: 'REST APIs', level: 50, category: 'backend', yearsOfExperience: 2, color: '#FF6B6B' },
 
   // Database
   { name: 'MongoDB', level: 75, category: 'database', yearsOfExperience: 1, color: '#47A248' },

@@ -100,7 +100,7 @@ const Skills: React.FC = () => {
                           {/* Skill level indicator */}
                           <div className="mt-2 flex justify-center">
                             <div className="flex space-x-1">
-                              {getSkillLevelDots(skill.level)}
+                              {getSkillLevelDots(skill.level/25)}
                             </div>
                           </div>
                         </div>
